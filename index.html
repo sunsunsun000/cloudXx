@@ -360,7 +360,7 @@
 					<th>状态</th>
 				</tr>
 				<tr ng-repeat="item in lists" class="data_item">
-					<td>{{item.id}}</td>
+					<td>{{item.index}}</td>
 					<td class="check_box"><input type="checkbox" ng-model="item.isSelected"></td>
 					<td>{{item.storeCode}}</td>
 					<td>{{item.storeName}}</td>
@@ -375,6 +375,7 @@
 	<script src="js/jquery-1.9.1.js"></script>
 	<script src="js/angular.js"></script>
 	<script src="js/common.js"></script>
+	<script src="js/request.js"></script>
 	<script src="base-data/base-data-store.js"></script>
 </body>
 </html>

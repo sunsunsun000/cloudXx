@@ -1,5 +1,5 @@
 
-app.controller('baseDataStoreCtrl', function($scope,$rootScope) {
+app.controller('baseDataStoreCtrl', function($scope, request) {
 
 	/**
 	 * currentStatus----状态按钮被选择的状态，默认为空，即未选择任何状态
@@ -17,7 +17,8 @@ app.controller('baseDataStoreCtrl', function($scope,$rootScope) {
 	 */
 	$scope.lists = [
 		{
-			id: 1,
+			id: 100,
+			index: 1,
 			isSelected: false,
 			storeCode: 1000,
 			storeName: '店铺1',
@@ -27,7 +28,8 @@ app.controller('baseDataStoreCtrl', function($scope,$rootScope) {
 			status: 'Y'
 		},
 		{
-			id: 2,
+			id: 101,
+			index: 2,
 			isSelected: false,
 			storeCode: 1001,
 			storeName: '店铺1',
@@ -37,7 +39,8 @@ app.controller('baseDataStoreCtrl', function($scope,$rootScope) {
 			status: 'Y'
 		},
 		{
-			id: 3,
+			id: 102,
+			index: 3,
 			isSelected: true,
 			storeCode: 1002,
 			storeName: '店铺1',
@@ -77,9 +80,72 @@ app.controller('baseDataStoreCtrl', function($scope,$rootScope) {
 	};
 
 	$scope.delete = function() {
-		$('.data_item').each(function(index, item) {
-			console.log(item.checked);
+		var deleteLists = [];
+		angular.forEach($scope.lists, function(item) {
+			if(item.isSelected) {
+				deleteLists.push(item.id);
+			}
 		});
+		var query = {
+			method: 'GET',
+			lists: deleteLists,
+			url: '../temp.json'
+		};
+		request(query).then(function(data) {
+			console.log('chenggongle ');
+		}, function(err)  {
+			console.log(err);
+		});
+
+
+
+
+		// $http({
+		//   method:'GET',
+		//   url:'../temp.json'
+		// }).then(function(data) {
+		// 	// data为返回的数据对象
+		// 	console.log('请求成功');
+		// }, function(err) {
+		// 	// err为请求失败后返回的错误信息
+		// 	console.log('请求失败');
+		// }).then(function() {
+		// 	console.log('好吃呢拱了');
+		// }, function(err) {
+		// 	console.log(err);
+		// });
+
+		// $http({
+		//   method:'GET',
+		//   url:'../temp.json'
+		// }).then(function(data) {
+		// 	var defer = $q.defer();
+		// 	console.log('chneggongle');
+		// 	var a = true
+		// 	if(!a){
+  //               defer.reject({
+  //                   type: -1,
+  //                   data: data
+  //               });
+  //           }else {
+  //               defer.resolve(data.data);
+  //           }
+  //           return defer.promise;
+		// }, function (err) {
+  //           throw {
+  //               type: -1,
+  //               data: err
+  //           };
+  //       }).then(function(data) {
+		// 	console.log(123);
+		// }, function(err) {
+		// 	console.log(err);
+		// });
+		// .then(function() {
+		// 	console.log('好吃呢拱了');
+		// }, function(err) {
+		// 	console.log(err);
+		// });
 	};
 
 	$scope.click = function() {
