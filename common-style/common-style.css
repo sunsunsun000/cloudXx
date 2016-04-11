@@ -1,0 +1,245 @@
+html {
+	margin: 0;
+	padding: 0;
+}
+body {
+	font-size: 12px;
+	margin: 0;
+	padding: 0;
+	background: #eee;
+}
+a {
+	text-decoration: none;
+	color: #808080;
+}
+
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.main {
+	width: 1200px;
+	margin: 0 auto;
+	background: #fff;
+}
+
+
+/*-----------------------------------------------------头部尺寸-----------------------------------------------------*/
+.header {
+	width: 100%;
+	/*margin: 0 auto;*/
+    color: #808080;
+}
+
+/*-------------------------------------------------顶部用户信息样式---------------------------------------------------*/
+.login_box {
+	height: 37px;
+	line-height: 37px;
+	padding: 0px 15px;
+	background: url('../images/tool_bg.jpg') center repeat-x;
+}
+.icon_home {
+	display: inline-block;
+	height: 16px;
+	line-height: 16px;
+	padding-left: 24px;
+	background: url('../images/ico_home.png') left center no-repeat;
+	background-size: 24%;
+}
+.user_info {
+	float: right;
+	font-size: 12px;
+}
+.user_info i {
+	margin: 10px;
+	font-style: normal;
+}
+.user_name {
+	color: blue;
+}
+.my_account, .log_out {
+	font-size: 12px;
+	height: 16px;
+	line-height: 16px;
+	padding-left: 18px;
+	margin-left: 20px;
+}
+.my_account {
+	background: url('../images/ico_lock.png') left center no-repeat;
+}
+.log_out {
+	background: url('../images/ico_lock.png') left center no-repeat;
+}
+
+
+/*-------------------------------------------------logo栏样式---------------------------------------------------*/
+.logo_bar {
+	height: 60px;
+	padding: 5px 5px;
+}
+.logo_img {
+	display: inline-block;
+	width: 260px;
+	height: 53px;
+	background: url('../images/logo.png') center no-repeat;
+}
+.help_box {
+	float: right;
+}
+.question, .helper {
+	display: inline-block;
+	width: 79px;
+	height: 24px;
+	margin: 18px auto;
+}
+.question {
+	background: url('../images/btn_1.png') center no-repeat;
+}
+.helper {
+	background: url('../images/btn_2.png') center no-repeat;
+}
+
+/*-------------------------------------------------菜单栏样式---------------------------------------------------*/
+.lists {
+	height: 40px;
+	margin: 0;
+	padding: 0;
+	background: #00569F;
+}
+.item {
+	position: relative;
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	height: 40px;
+    font-size: 13px;
+    color: #fff;
+    font-family: '微软雅黑';
+    border-right: 1px solid #003E7F;
+}
+.item:hover {
+	background: #fff;
+	color: #808080;
+}
+.item:hover .down_arrow {
+	border-color: #333 transparent transparent transparent;
+}
+.item:hover a {
+	color: #333;
+	text-shadow: 1px 1px 1px #333;
+	text-shadow: none;
+}
+.item>a {
+	float: left;
+    display: block;
+    color: #fff;
+    padding: 12px 38px 12px 25px;
+    text-shadow: 1px 1px 1px #000;
+}
+.down_arrow {
+	position: absolute;
+	right: 12px;
+	top: 50%;
+	margin-top: -3px;
+	width: 0px;
+    height: 0px;
+    border: 6px;
+    border-style: solid;
+    border-color: #fff transparent transparent transparent;
+    display: inline;
+}
+.sub_container {
+	position: absolute;
+	top: 0;
+	left: 1px;
+	/*border: 1px solid red;*/
+	display: none;
+}
+.sub_lists {
+	width: 210px;
+	margin: 0;
+	padding-left: 20px;
+	margin-top: 40px;
+	-webkit-box-shadow: 0 0 2px #000;
+	box-shadow: 0 0 2px #000;
+	border-radius: 0 0 5px 5px;
+	background: #fff;
+	/*border: 1px solid red;*/
+}
+.sub_item {
+	display: block;
+	color: #000;
+	padding: 10px 0;
+}
+.sub_item a:before {
+	content: '';
+	display: inline-block;
+	width: 8px;
+	height: 7px;
+	background: url('../images/arrow_right.png') left center no-repeat;
+	margin-right: 10px;
+}
+.sub_container_group {
+	position: absolute;
+	top: 0;
+	left: 1px;
+	display: none;
+}
+.sub_container_wrap {
+	width: 560px;
+	padding-left: 20px;
+	padding-bottom: 20px;
+	margin-top: 40px;
+	-webkit-box-shadow: 0 0 2px #000;
+	box-shadow: 0 0 2px #000;
+	border-radius: 0 0 5px 5px;
+	overflow: hidden;
+	background: #fff;
+}
+.sub_lists_box {
+	display: inline-block;
+	min-width: 170px;
+	float: left;
+	margin-right: 10px;
+	/*display: none;*/
+}
+.sub_lists_title {
+	border-radius: 5px 5px 0 0;
+	background: #00569F;
+	color: #fff;
+	font-size: 13px;
+	padding: 5px 0 5px 20px;
+	margin-bottom: 0;
+}
+.sub_lists_group {
+	padding-left: 5px;
+}
+.sub_lists_group .sub_item {
+	padding: 5px 0;
+}
+/*----------------------------------------当前位置导航提示样式---------------------------------*/
+.path_tip {
+	height: 20px;
+	cursor: pointer;
+	padding-top: 20px;
+	padding-left: 10px;
+	border-bottom: 1px solid #ccc;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+/*----------------------------------------页面操作说明文字框------------------------------------*/
+.instruction {
+	border: 1px solid #ccc;
+	padding: 15px 10px 15px 50px;
+	background: url('../images/info.png') 10px center no-repeat;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+.instruction_lists li {
+	height: 20px;
+}
+.instruction {
+	margin-top: 10px;
+}

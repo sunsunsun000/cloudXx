@@ -1,0 +1,41 @@
+.body {
+	padding: 0 10px;
+	min-height: 320px;
+}
+.filter {
+	margin-top: 20px;
+	padding: 10px 0;
+	
+	overflow: hidden;
+}
+.filter_input {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 10px 10px;
+}
+.filter_btns {
+	float: right;
+	margin-top: 10px;
+}
+.filter_btns:after {
+	content: "."; 
+    display: block;
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+.data_table {
+	border-collapse:collapse 
+}
+.data_table td,
+.data_table th {
+	width: 200px;
+	border: 1px solid #ccc;
+	text-align: center;
+}
+.data_table .check_box,
+.data_table th:first-child,
+.data_table td:first-child {
+	width: 32px;
+}

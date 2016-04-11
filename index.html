@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+	<meta charset="UTF-8">
+	<title>XXX</title>
+	<link rel="stylesheet" href="common-style/common-style.css">
+	<link rel="stylesheet" href="base-data/base-data-store.css">
+</head>
+<body ng-controller="baseDataStoreCtrl">
+	<div class="main">
+		<div class="header">
+			<div class="login_box">
+				<a href="#" class="icon_home">xxx-主页</a>
+				<div class="user_info">
+					<span class="user_name">user-name</span>,欢迎您使用xxx店进销存.
+					<a href="#" class="my_account">我的账号</a><i>|</i><a href="#" class="log_out">注销登陆</a>
+				</div>
+			</div>
+			<div class="logo_bar">
+				<a href="#" class="logo_img"></a>
+				<div class="help_box">
+					<a href="#" class="question"></a>
+					<a href="#" class="helper"></a>
+				</div>
+			</div>
+
+			<div class="menu">
+				<ul class="lists">
+					<li class="item">
+						<a href="#">
+							基础数据
+						</a>
+						<i class="down_arrow"></i>
+						<div class="sub_container">
+							<ul class="sub_lists">
+								<li class="sub_item">
+									<a href="#">门店</a>
+								</li>
+								<li class="sub_item">
+									<a href="#">商品类型</a>
+								</li>
+								<li class="sub_item">
+									<a href="#">商品</a>
+								</li>
+								<li class="sub_item">
+									<a href="#">导入商品</a>
+								</li>
+								<li class="sub_item">
+									<a href="#">客户</a>
+								</li>
+								<li class="sub_item">
+									<a href="#">供应商</a>
+								</li>
+								<li class="sub_item">
+									<a href="#">商品</a>
+								</li>
+							</ul>
+						</div>
+					</li><li class="item">
+						<a href="#">
+							采购
+						</a>
+						<i class="down_arrow"></i>
+						<div class="sub_container_group">
+							<div class="sub_container_wrap">
+								<div class="sub_lists_box">
+									<h2 class="sub_lists_title">操作</h2>
+									<ul class="sub_lists_group">
+										<li class="sub_item">
+											<a href="#">快速采购</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">常规采购</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">模板采购</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">采购退货</a>
+										</li>
+									</ul>
+								</div>
+								<div class="sub_lists_box">
+									<h2 class="sub_lists_title">查询</h2>
+									<ul class="sub_lists_group">
+										<li class="sub_item">
+											<a href="#">采购历史</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">退货历史</a>
+										</li>
+									</ul>
+								</div>
+								<div class="sub_lists_box">
+									<h2 class="sub_lists_title">采购进货统计</h2>
+									<ul class="sub_lists_group">
+										<li class="sub_item">
+											<a href="#">采购退货统计</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">供应商排行（月）</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">模板采购</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">采购退货</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</li><li class="item">
+						<a href="#">
+							销售
+						</a>
+						<i class="down_arrow"></i>
+						<div class="sub_container_group">
+							<div class="sub_container_wrap">
+								<div class="sub_lists_box">
+									<h2 class="sub_lists_title">操作</h2>
+									<ul class="sub_lists_group">
+										<li class="sub_item">
+											<a href="#">快速销售</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">常规销售</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">模板销售</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">销售退货</a>
+										</li>
+									</ul>
+								</div>
+								<div class="sub_lists_box">
+									<h2 class="sub_lists_title">查询</h2>
+									<ul class="sub_lists_group">
+										<li class="sub_item">
+											<a href="#">销售历史</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">退货历史</a>
+										</li>
+									</ul>
+								</div>
+								<div class="sub_lists_box">
+									<h2 class="sub_lists_title">报表</h2>
+									<ul class="sub_lists_group">
+										<li class="sub_item">
+											<a href="#">销售出货统计</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">销售退货统计</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">商品明细汇总</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">客户明细汇总</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">商品排行</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">客户排行</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">门店营业状况</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</li><li class="item">
+						<a href="#">
+							库存
+						</a>
+						<i class="down_arrow"></i>
+						<div class="sub_container_group">
+							<div class="sub_container_wrap">
+								<div class="sub_lists_box">
+									<h2 class="sub_lists_title">操作</h2>
+									<ul class="sub_lists_group">
+										<li class="sub_item">
+											<a href="#">出库</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">入库</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">盘点</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">调拨</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">期初库存导入</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">库存调整导入</a>
+										</li>
+									</ul>
+								</div>
+								<div class="sub_lists_box">
+									<h2 class="sub_lists_title">查询</h2>
+									<ul class="sub_lists_group">
+										<li class="sub_item">
+											<a href="#">出库历史</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">入库历史</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">盘点历史</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">调拨历史</a>
+										</li>
+									</ul>
+								</div>
+								<div class="sub_lists_box">
+									<h2 class="sub_lists_title">报表</h2>
+									<ul class="sub_lists_group">
+										<li class="sub_item">
+											<a href="#">出货统计</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">入库统计</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">盘点统计</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">调拨统计</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">库存分布表</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">库存异动（日）</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">库存异动（月）</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</li><li class="item">
+						<a href="#">
+							资金
+						</a>
+						<i class="down_arrow"></i>
+						<div class="sub_container_group">
+							<div class="sub_container_wrap">
+								<div class="sub_lists_box">
+									<h2 class="sub_lists_title">操作</h2>
+									<ul class="sub_lists_group">
+										<li class="sub_item">
+											<a href="#">应收款记账</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">应付款记账</a>
+										</li>
+									</ul>
+								</div>
+								<div class="sub_lists_box">
+									<h2 class="sub_lists_title">查询</h2>
+									<ul class="sub_lists_group">
+										<li class="sub_item">
+											<a href="#">应收款历史</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">应付款历史</a>
+										</li>
+									</ul>
+								</div>
+								<div class="sub_lists_box">
+									<h2 class="sub_lists_title">报表</h2>
+									<ul class="sub_lists_group">
+										<li class="sub_item">
+											<a href="#">应收统计</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">应付统计</a>
+										</li>
+										<li class="sub_item">
+											<a href="#">收支分析</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</li><li class="item">
+						<a href="#">
+							系统设置
+						</a>
+						<i class="down_arrow"></i>
+						<div class="sub_container">
+							<ul class="sub_lists">
+								<li class="sub_item">
+									<a href="#">员工管理</a>
+								</li>
+								<li class="sub_item">
+									<a href="#">角色管理</a>
+								</li>
+								<li class="sub_item">
+									<a href="#">权限管理</a>
+								</li>
+								<li class="sub_item">
+									<a href="#">问题反馈</a>
+								</li>
+								<li class="sub_item">
+									<a href="#">我的配置</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</div>
+
+			<div class="path_tip" id="path_tip">当前位置 &gt; <span>基础数据 &gt; 门店</span></div>
+			<div class="instruction">
+				<ul class="instruction_lists">
+					<li>1&gt;&nbsp;状态:Y=正常，N=停用；</li>
+					<li>2&gt;&nbsp;双击某一条数据可进行信息修改；</li>
+					<li>3&gt;&nbsp;<span class="red">操作技巧</span>:下载模板并批量修改后在<a href="#">导入</a></li>
+				</ul>
+			</div>
+		</div>
+		
+		<div class="body">
+			<div class="filter">
+				<div class="filter_input">
+					<span class="">门店代码：</span><input type="text" ng-model="storeCode">
+					<span class="">门店名称：</span><input type="text" ng-model="storeName">
+					<span class="">门店地址：</span><input type="text" ng-model="storeAddress">
+					<span class="">状态：</span><select ng-model="currentStatus" ng-options="status for status in statusList"></select>
+				</div>
+				<div class="filter_btns">
+					<button type="button" ng-click="search()">搜索</button>
+					<button type="button" ng-click="reset()">重置</button>
+					<button type="button" ng-click="delete()">批量删除</button>
+					<button type="button" ng-click="add()">新建</button>
+				</div>
+			</div>
+			<table class="data_table">
+				<tr>
+					<th></th>
+					<th class="check_box">
+						<input class="inp" ng-click="selectAll()" type="checkbox" ng-model="isSelectedAll">
+					</th>
+					<th>门店代码</th>
+					<th>门店名称</th>
+					<th>地址</th>
+					<th>创建时间</th>
+					<th>创建人</th>
+					<th>状态</th>
+				</tr>
+				<tr ng-repeat="item in lists" class="data_item">
+					<td>{{item.id}}</td>
+					<td class="check_box"><input type="checkbox" ng-model="item.isSelected"></td>
+					<td>{{item.storeCode}}</td>
+					<td>{{item.storeName}}</td>
+					<td>{{item.storeAddress}}</td>
+					<td>{{item.createTime}}</td>
+					<td>{{item.creater}}</td>
+					<td>{{item.status}}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<script src="js/jquery-1.9.1.js"></script>
+	<script src="js/angular.js"></script>
+	<script src="js/common.js"></script>
+	<script src="base-data/base-data-store.js"></script>
+</body>
+</html>
