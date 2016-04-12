@@ -12,18 +12,20 @@ app.factory('request', function ($http, $q) {
     return function (option) {
         return $http(option).then(function (response) {
             var defer = $q.defer();
-            if(angular.isUndefined(response.data.code)){
+            console.log(response);
+            // if(angular.isUndefined(response.data.code)){
+            if(angular.isUndefined(response)){
                 defer.reject({
                     type: -1,
                     data: response
                 });
             }
-            else if (response.data.code !== 0) {
+            /*else if (response.data.code !== 0) {
                 defer.reject({
                     type: 1,
                     data: response
                 });
-            } else {
+            } */else {
                 defer.resolve(response.data);
             }
             return defer.promise;

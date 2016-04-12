@@ -1,0 +1,110 @@
+{
+	"code":0,
+	"data":[
+		{
+			"id": 100,
+			"index": 1,
+			"isSelected": false,
+			"storeCode": 1000,
+			"storeName": "店铺1",
+			"storeAddress": "地址1",
+			"createTime": "2016-4-11",
+			"creater": "Xx",
+			"status": "Y"
+		},
+		{
+			"id": 101,
+			"index": 2,
+			"isSelected": true,
+			"storeCode": 1000,
+			"storeName": "店铺1",
+			"storeAddress": "地址1",
+			"createTime": "2016-4-11",
+			"creater": "Xx",
+			"status": "Y"
+		},
+		{
+			"id": 102,
+			"index": 3,
+			"isSelected": false,
+			"storeCode": 1000,
+			"storeName": "店铺1",
+			"storeAddress": "地址1",
+			"createTime": "2016-4-11",
+			"creater": "Xx",
+			"status": "Y"
+		},
+		{
+			"id": 102,
+			"index": 3,
+			"isSelected": false,
+			"storeCode": 1000,
+			"storeName": "店铺1",
+			"storeAddress": "地址1",
+			"createTime": "2016-4-11",
+			"creater": "Xx",
+			"status": "Y"
+		},
+		{
+			"id": 102,
+			"index": 3,
+			"isSelected": false,
+			"storeCode": 1000,
+			"storeName": "店铺1",
+			"storeAddress": "地址1",
+			"createTime": "2016-4-11",
+			"creater": "Xx",
+			"status": "Y"
+		},
+		{
+			"id": 102,
+			"index": 3,
+			"isSelected": false,
+			"storeCode": 1000,
+			"storeName": "店铺1",
+			"storeAddress": "地址1",
+			"createTime": "2016-4-11",
+			"creater": "Xx",
+			"status": "Y"
+		},
+		{
+			"id": 102,
+			"index": 3,
+			"isSelected": false,
+			"storeCode": 1000,
+			"storeName": "店铺1",
+			"storeAddress": "地址1",
+			"createTime": "2016-4-11",
+			"creater": "Xx",
+			"status": "Y"
+		},
+		{
+			"id": 102,
+			"index": 3,
+			"isSelected": false,
+			"storeCode": 1000,
+			"storeName": "店铺1",
+			"storeAddress": "地址1",
+			"createTime": "2016-4-11",
+			"creater": "Xx",
+			"status": "Y"
+		},
+		{
+			"id": 102,
+			"index": 3,
+			"isSelected": false,
+			"storeCode": 1000,
+			"storeName": "店铺1",
+			"storeAddress": "地址1",
+			"createTime": "2016-4-11",
+			"creater": "Xx",
+			"status": "Y"
+		}
+	],
+	"params":{
+		"total":60,
+		"ps":5,
+		"pn":2
+	},
+	"msg":""
+}

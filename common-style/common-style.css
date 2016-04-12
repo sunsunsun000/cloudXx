@@ -23,6 +23,7 @@ ul {
 	width: 1200px;
 	margin: 0 auto;
 	background: #fff;
+	overflow: hidden;
 }
 
 
@@ -242,4 +243,53 @@ ul {
 }
 .instruction {
 	margin-top: 10px;
+}
+/*-----------------------------------------分页组建样式-----------------------------------------*/
+.page-bar.s3, .page-bar.s3 a {
+    height: 35px;
+    text-align: center;
+}
+.page-bar {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    line-height: 18px;
+    min-height: 22px;
+    position: relative;
+    text-align: center;
+    white-space: nowrap;
+    float: left;
+}
+.page-bar.s3 a {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    display: inline-block;
+    line-height: 35px;
+    padding: 0;
+    width: 35px;
+}
+.page-bar.s3, .page-bar.s3 a {
+    height: 35px;
+    text-align: center;
+}
+.page-bar a {
+    margin: 0 2px;
+}
+
+.page-bar span {
+    padding: 0 3px;
+    text-align: center;
+}
+em {
+	font-style: normal;
+}
+.page-bar input {
+	height: 18px;
+}
+.page-bar.s3 a.cur {
+	background: #00569F;
+	color: #fff;
+}
+.page-bar.s3 a:hover {
+	background: #00569F;
+	color: #fff;
 }

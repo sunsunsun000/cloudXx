@@ -15,41 +15,41 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 	/**
 	 * 模拟请求回来的数据
 	 */
-	$scope.lists = [
-		{
-			id: 100,
-			index: 1,
-			isSelected: false,
-			storeCode: 1000,
-			storeName: '店铺1',
-			storeAddress: '地址1',
-			createTime: '2016-4-11',
-			creater: 'Xx',
-			status: 'Y'
-		},
-		{
-			id: 101,
-			index: 2,
-			isSelected: false,
-			storeCode: 1001,
-			storeName: '店铺1',
-			storeAddress: '地址1',
-			createTime: '2016-4-11',
-			creater: 'Xx',
-			status: 'Y'
-		},
-		{
-			id: 102,
-			index: 3,
-			isSelected: true,
-			storeCode: 1002,
-			storeName: '店铺1',
-			storeAddress: '地址1',
-			createTime: '2016-4-11',
-			creater: 'Xx',
-			status: 'N'
-		}
-	];
+	// $scope.lists = [
+	// 	{
+	// 		id: 100,
+	// 		index: 1,
+	// 		isSelected: false,
+	// 		storeCode: 1000,
+	// 		storeName: '店铺1',
+	// 		storeAddress: '地址1',
+	// 		createTime: '2016-4-11',
+	// 		creater: 'Xx',
+	// 		status: 'Y'
+	// 	},
+	// 	{
+	// 		id: 101,
+	// 		index: 2,
+	// 		isSelected: false,
+	// 		storeCode: 1001,
+	// 		storeName: '店铺1',
+	// 		storeAddress: '地址1',
+	// 		createTime: '2016-4-11',
+	// 		creater: 'Xx',
+	// 		status: 'Y'
+	// 	},
+	// 	{
+	// 		id: 102,
+	// 		index: 3,
+	// 		isSelected: true,
+	// 		storeCode: 1002,
+	// 		storeName: '店铺1',
+	// 		storeAddress: '地址1',
+	// 		createTime: '2016-4-11',
+	// 		creater: 'Xx',
+	// 		status: 'N'
+	// 	}
+	// ];
 
 	/**
 	 * 批量选中按钮事件处理函数
@@ -86,66 +86,7 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 				deleteLists.push(item.id);
 			}
 		});
-		var query = {
-			method: 'GET',
-			lists: deleteLists,
-			url: '../temp.json'
-		};
-		request(query).then(function(data) {
-			console.log('chenggongle ');
-		}, function(err)  {
-			console.log(err);
-		});
-
-
-
-
-		// $http({
-		//   method:'GET',
-		//   url:'../temp.json'
-		// }).then(function(data) {
-		// 	// data为返回的数据对象
-		// 	console.log('请求成功');
-		// }, function(err) {
-		// 	// err为请求失败后返回的错误信息
-		// 	console.log('请求失败');
-		// }).then(function() {
-		// 	console.log('好吃呢拱了');
-		// }, function(err) {
-		// 	console.log(err);
-		// });
-
-		// $http({
-		//   method:'GET',
-		//   url:'../temp.json'
-		// }).then(function(data) {
-		// 	var defer = $q.defer();
-		// 	console.log('chneggongle');
-		// 	var a = true
-		// 	if(!a){
-  //               defer.reject({
-  //                   type: -1,
-  //                   data: data
-  //               });
-  //           }else {
-  //               defer.resolve(data.data);
-  //           }
-  //           return defer.promise;
-		// }, function (err) {
-  //           throw {
-  //               type: -1,
-  //               data: err
-  //           };
-  //       }).then(function(data) {
-		// 	console.log(123);
-		// }, function(err) {
-		// 	console.log(err);
-		// });
-		// .then(function() {
-		// 	console.log('好吃呢拱了');
-		// }, function(err) {
-		// 	console.log(err);
-		// });
+		console.log(deleteLists);
 	};
 
 	$scope.click = function() {
@@ -153,5 +94,77 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 			console.log(elem,elem.checked);
 		});
 	};
+
+	$scope.pageSearchList = {
+        pn: 7,//当前显示的是第几页
+        ps: 5,//每页显示多少条
+        pl: 5,//分页栏显示页数
+    };
+
+    $scope.getOrderList = function(args, success){
+        $scope.orderList = [];
+        var param = {
+            pn: $scope.pageSearchList.pn,
+            ps: $scope.pageSearchList.ps,
+            method: 'GET',
+            url: '../temp.json'
+        };
+
+        request(param).then(function(rs) {
+			console.log('chenggongle ');
+
+			$scope.orderList = [
+					{
+						id: 100,
+						index: 1,
+						isSelected: false,
+						storeCode: 1000,
+						storeName: '店铺1',
+						storeAddress: '地址1',
+						createTime: '2016-4-11',
+						creater: 'Xx',
+						status: 'Y'
+					},
+					{
+						id: 101,
+						index: 2,
+						isSelected: false,
+						storeCode: 1001,
+						storeName: '店铺1',
+						storeAddress: '地址1',
+						createTime: '2016-4-11',
+						creater: 'Xx',
+						status: 'Y'
+					},
+					{
+						id: 102,
+						index: 3,
+						isSelected: true,
+						storeCode: 1002,
+						storeName: '店铺1',
+						storeAddress: '地址1',
+						createTime: '2016-4-11',
+						creater: 'Xx',
+						status: 'N'
+					}
+				];
+			console.log($scope.orderList);
+			if (rs.data) {
+                pn = $scope.pageSearchList.pn;
+                rs.pa = {
+                    total: 40,//rs.data.params.total,
+                    pn: $scope.pageSearchList.pn,//当前显示的是第几页
+                    ps: $scope.pageSearchList.ps //每页显示多少条
+                };
+                success(rs);
+                $scope.lists = rs.data;
+            }
+			
+
+		}, function(err)  {
+			console.log(err);
+		});
+    };
+
 	
 });
