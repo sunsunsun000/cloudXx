@@ -11,46 +11,6 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 	$scope.isSelectedAll = false;
 
 
-
-	/**
-	 * 模拟请求回来的数据
-	 */
-	// $scope.lists = [
-	// 	{
-	// 		id: 100,
-	// 		index: 1,
-	// 		isSelected: false,
-	// 		storeCode: 1000,
-	// 		storeName: '店铺1',
-	// 		storeAddress: '地址1',
-	// 		createTime: '2016-4-11',
-	// 		creater: 'Xx',
-	// 		status: 'Y'
-	// 	},
-	// 	{
-	// 		id: 101,
-	// 		index: 2,
-	// 		isSelected: false,
-	// 		storeCode: 1001,
-	// 		storeName: '店铺1',
-	// 		storeAddress: '地址1',
-	// 		createTime: '2016-4-11',
-	// 		creater: 'Xx',
-	// 		status: 'Y'
-	// 	},
-	// 	{
-	// 		id: 102,
-	// 		index: 3,
-	// 		isSelected: true,
-	// 		storeCode: 1002,
-	// 		storeName: '店铺1',
-	// 		storeAddress: '地址1',
-	// 		createTime: '2016-4-11',
-	// 		creater: 'Xx',
-	// 		status: 'N'
-	// 	}
-	// ];
-
 	/**
 	 * 批量选中按钮事件处理函数
 	 */
@@ -86,78 +46,78 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 				deleteLists.push(item.id);
 			}
 		});
-		console.log(deleteLists);
+		//todo---------------------发送待删除数据的id到后台
 	};
 
-	$scope.click = function() {
-		$('.inp').each(function(index, elem) {
-			console.log(elem,elem.checked);
-		});
-	};
+	/**
+	 * 新建按钮响应函数
+	 */
+	$scope.add = function() {
+		$('.cover').show();
+	}
 
+	/**
+	 * 在新建数据弹出层点击取消按钮时事件响应函数
+	 * @return {[type]} [description]
+	 */
+	$scope.cancel = function() {
+		$('.cover').hide();
+	}
+
+	/**
+	 * 在新建数据弹出层点击取消保存时事件响应函数
+	 * @return {[type]} [description]
+	 */
+	$scope.save = function() {
+		
+	}
+
+	/**
+	 * 配置分页信息，触发回调函数被调用
+	 * @type {Object}
+	 */
 	$scope.pageSearchList = {
-        pn: 7,//当前显示的是第几页
-        ps: 5,//每页显示多少条
+        pn: 1,//当前显示的是第几页
+        ps: 1,//每页显示多少条
         pl: 5,//分页栏显示页数
     };
 
+    /**
+     * 分页组建回调函数
+     * @param  {[type]} args    [description]
+     * @param  {[type]} success [description]
+     * @return {[type]}         [description]
+     */
     $scope.getOrderList = function(args, success){
-        $scope.orderList = [];
+    	console.log(args);
+
         var param = {
-            pn: $scope.pageSearchList.pn,
-            ps: $scope.pageSearchList.ps,
-            method: 'GET',
-            url: '../temp.json'
+            url:'http://localhost:7999/get-data',
+			method: 'GET',
+			params: {
+				pageNum: args.pn,//$scope.pageSearchList.pn,
+            	pageSize: args.ps//$scope.pageSearchList.ps,
+			}
         };
 
         request(param).then(function(rs) {
-			console.log('chenggongle ');
+			// console.log('chenggongle ');
 
-			$scope.orderList = [
-					{
-						id: 100,
-						index: 1,
-						isSelected: false,
-						storeCode: 1000,
-						storeName: '店铺1',
-						storeAddress: '地址1',
-						createTime: '2016-4-11',
-						creater: 'Xx',
-						status: 'Y'
-					},
-					{
-						id: 101,
-						index: 2,
-						isSelected: false,
-						storeCode: 1001,
-						storeName: '店铺1',
-						storeAddress: '地址1',
-						createTime: '2016-4-11',
-						creater: 'Xx',
-						status: 'Y'
-					},
-					{
-						id: 102,
-						index: 3,
-						isSelected: true,
-						storeCode: 1002,
-						storeName: '店铺1',
-						storeAddress: '地址1',
-						createTime: '2016-4-11',
-						creater: 'Xx',
-						status: 'N'
-					}
-				];
-			console.log($scope.orderList);
 			if (rs.data) {
                 pn = $scope.pageSearchList.pn;
+                console.log(rs.data.total);
                 rs.pa = {
-                    total: 40,//rs.data.params.total,
+                    total: rs.data.total,//rs.data.params.total,
                     pn: $scope.pageSearchList.pn,//当前显示的是第几页
                     ps: $scope.pageSearchList.ps //每页显示多少条
                 };
+                console.log('-------------------------');
+                console.log(rs);
                 success(rs);
-                $scope.lists = rs.data;
+                $scope.lists = rs.data.data;
+
+                // success(rs);
+                // $scope.lists = rs.data;
             }
 			
 

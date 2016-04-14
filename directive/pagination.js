@@ -29,6 +29,7 @@ app.directive("pagination", function() {
                 $scope.pNum = parseInt($scope.pageargs.ps);
                 $scope.pMax = parseInt($scope.pageargs.pl) || 5;
                 $scope.pagefn($scope.pageargs, function(data) {
+                    // console.log($scope.pageargs);
                     $scope.pLen = Math.ceil(parseInt(data.pa.total) / $scope.pNum);
                     $scope.keyListWatch();
                 });
