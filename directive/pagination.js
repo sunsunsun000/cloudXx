@@ -33,7 +33,7 @@ app.directive("pagination", function() {
                     $scope.pLen = Math.ceil(parseInt(data.pa.total) / $scope.pNum);
                     $scope.keyListWatch();
                 });
-            });
+            }, true);
 
             $scope.reKeyList = function(s, e, limit) {
                 $scope.keyList = [];

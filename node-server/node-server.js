@@ -9,19 +9,21 @@ var fs = require('fs');
 var url = require('url');
 
 var mongo=require("mongodb");
+var ObjectID = require("mongodb").ObjectID;
 var host="localhost";
 var port=27017;//mongo.Connection.DEFAULT_PORT;
 var server=new mongo.Server(host,port,{auto_reconnect:true});//创建数据库所在的服务器服务器
 var db=new mongo.Db("node-mongo-examples2",server,{safe:true});//创建数据库对象
 
-var getData = function(db, args, success) {
+var getData = function(db, filter, success) {
     db.collection("users", function (err,collection) {
         if(err) throw err;
         else{
-            collection.find({}).toArray(function(err,docs){
+
+            console.log(filter,'111111111111');
+            collection.find(filter).toArray(function(err,docs){
                 if(err) throw  err;
                 else{
-                    // console.log(docs);
                     db.close();
                     success(docs);
                 }
@@ -29,15 +31,70 @@ var getData = function(db, args, success) {
         }
     });
 };
+var deleteItem = function(db, deleteLists, finish, result) {
 
-var insert = function(db) {
+    // db.collection('users', function(err, collection) {
+    //     if(err) throw err;
+    //         else {
+                
+    //             collection.remove({_id: ObjectID('5712189a63c042b0274fe31c')}, function(err,result) {
+    //                 if(err) throw err;
+    //                 else {
+    //                     console.log(result);
+    //                     db.close();
+    //                 }
+                    
+
+    //             })
+    //         }
+    //     })
+
+
+
+
+
+    console.log(deleteLists,'XXXXXXXXXXXXXX');
+    if(deleteLists.length > 0) {
+        db.collection('users', function(err, collection) {
+        if(err) throw err;
+            else {
+                var id = deleteLists.pop()['_id'];
+                
+                collection.remove({_id: ObjectID(id)}, function(err,result) {
+                    if(err) throw err;
+                    else {
+                        if(deleteLists.length > 0) {
+                            deleteItem(db, deleteLists, result);
+                        } else {
+                            db.close();
+                            finish(result);
+                        }
+                    }
+                    
+                })
+            }
+        })
+    }
+    
+}
+var singleInsert = function(db, data, finish, param) {
     db.collection("users", function (err,collection) {
-            collection.insert({username:"盼盼",firstname:"李"}, function (err,docs) {
-                console.log(docs);
-                db.close();
+        // console.log(data,'-------------------------');
+        if(err) throw err;
+        else {
+            console.log(data);
+            collection.insert(data, function(err, docs) {
+                if(err) {
+                    console.log(err);
+                } else {
+                    db.close();
+                    finish(param);
+                }
             });
-        }); 
-};
+        }
+        
+    }); 
+}
 
 
 db.once("close", function (err,db) {//关闭数据库
@@ -102,29 +159,50 @@ function handleIssueList (req, res) {
                 }
             });
             req.on('end', function () {
-                var params = parseParams(formData);
-                if (params.id) {
-                    readData('issue', function (data) {
-                        var flag = false;
-                        var target;
-                        data.forEach(function (item, index) {
-                            if (item.id == params.id) {
-                                flag = true;
-                                target = index;
-                            }
-                        });
-                        if (flag) {
-                            data.splice(target, 1);
-                            writeData('issue', data, function () {
-                                finish(result);
-                            });
-                        } else {
-                            handleError({message: 'can not find id '+ params.id}, result);
-                        }
-                    });
-                } else {
-                    handleError({message: 'no id provided'}, result);
-                }
+                var deleteLists = [];
+
+                var params = formData;
+                console.log(params);
+                params = eval ("(" + params + ")");
+
+                // for(var i  = 0, len = params.length; i < len; i++) {
+                //     console.log(params[i]);
+                // }
+                
+                db.open(function (err,db) {//连接数据库
+                    if(err)
+                        throw err;
+                    else{
+                        deleteItem(db, params, finish, result);
+                    }
+                });
+                
+                
+
+
+
+                // if (params.id) {
+                //     readData('issue', function (data) {
+                //         var flag = false;
+                //         var target;
+                //         data.forEach(function (item, index) {
+                //             if (item.id == params.id) {
+                //                 flag = true;
+                //                 target = index;
+                //             }
+                //         });
+                //         if (flag) {
+                //             data.splice(target, 1);
+                //             writeData('issue', data, function () {
+                //                 finish(result);
+                //             });
+                //         } else {
+                //             handleError({message: 'can not find id '+ params.id}, result);
+                //         }
+                //     });
+                // } else {
+                //     handleError({message: 'no id provided'}, result);
+                // }
             });
             break;
         }
@@ -136,14 +214,30 @@ function handleIssueList (req, res) {
             });
             req.on('end', function () {
                 var params = parseParams(formData);
-                readData('issue', function (data) {
-                    var length = data.length;
-                    params.id = data[length - 1] ? data[length - 1].id + 1 : 1;
-                    data.push(params);
-                    writeData('issue', data, function () {
-                        finish(result);
-                    });
+                console.log('执行了');
+
+                db.open(function (err,db) {//连接数据库
+                    if(err)
+                        throw err;
+                    else{
+                        // console.log(formData);
+                        console.log(result);
+                        console.log(formData);
+                        singleInsert(db, JSON.parse(formData), finish, result);
+                    }
                 });
+
+
+
+                // readData('issue', function (data) {
+                //     var length = data.length;
+                //     params.id = data[length - 1] ? data[length - 1].id + 1 : 1;
+                //     data.push(params);
+                //     console.log(params);
+                //     writeData('issue', data, function () {
+                //         finish(result);
+                //     });
+                // });
             });
             break;
         }
@@ -183,25 +277,37 @@ function handleIssueList (req, res) {
         }
         case 'GET':
         default: {
-            console.log(parsed);
+            console.log(params,'---------------------');
+            
             var data = {
                 list: [],
                 total: 0, 
-                pageSize: +params.pageSize || 10, 
-                pageNum: +params.pageNum || 1
+                pageSize: +params.ps || 10, 
+                pageNum: +params.pn || 1,
             };
-            var args = {
-                pageSize: +params.pageSize || 10,
-                pageNum: +params.pageNum || 1
+
+            var filter = {};
+            
+            if(params.storeCode) {
+
+                filter.storeCode = decodeURI(params.storeCode);
             }
-            // console.log(data.pageSize);
+            if(params.storeName) {
+                filter.storeName = decodeURI(params.storeName);
+            }
+            if(params.storeAddress) {
+                filter.storeAddress = decodeURI(params.storeAddress);
+            }
+            if(params.status) {
+                filter.status = decodeURI(params.status);
+            }
+
 
             db.open(function (err,db) {//连接数据库
                 if(err)
                     throw err;
                 else{
-                    getData(db, args, function(rs) {
-                        console.log(rs.length,'--------------------');
+                    getData(db, filter, function(rs) {
                         data.total = rs.length;
                         data.data = rs.slice(data.pageSize * (data.pageNum - 1), data.pageSize * data.pageNum);
                         result.data = data;
@@ -209,31 +315,6 @@ function handleIssueList (req, res) {
                     });
                 }
             });
-
-            // fs.readFile(path.resolve(__dirname, 'issue.json'), function (err, d) {
-            //     if (err) {
-            //         if (err.code === 'ENOENT') {
-            //             fs.writeFile(path.resolve(__dirname, 'issue.json'), '[]', function (err) {
-            //                 if (err) {
-            //                     handleError(err, result);
-            //                     return;
-            //                 }
-            //                 result.data = data;
-            //                 finish(result);
-            //             });
-            //         } else {
-            //             handleError(err, result);
-            //         }
-            //     } else {
-            //         index++;
-            //         console.log('用户请求数据' + index);
-            //         var parsedData = JSON.parse(d);
-            //         data.data = parsedData.slice(data.pageSize * (data.pageNum - 1), data.pageSize * data.pageNum);
-            //         data.total = parsedData.length;
-            //         result.data = data;
-            //         finish(result);
-            //     }
-            // });
         }
     }
 }
@@ -424,6 +505,11 @@ app.on('request', function (req, res) {
     var requestUrl = url.parse(req.url).pathname;
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Access-Control-Allow-Origin', '*');
+
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+    res.setHeader("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+
+
     switch (requestUrl) {
         case '/get-data': {
             handleIssueList(req, res);

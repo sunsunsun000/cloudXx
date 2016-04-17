@@ -334,16 +334,16 @@
 		<div class="body">
 			<div class="filter">
 				<div class="filter_input">
-					<span class="">门店代码：</span><input type="text" ng-model="storeCode">
-					<span class="">门店名称：</span><input type="text" ng-model="storeName">
-					<span class="">门店地址：</span><input type="text" ng-model="storeAddress">
-					<span class="">状态：</span><select ng-model="currentStatus" ng-options="status for status in statusList"></select>
+					<span class="">门店代码：</span><input type="text" ng-model="storeCodeFilter">
+					<span class="">门店名称：</span><input type="text" ng-model="storeNameFilter">
+					<span class="">门店地址：</span><input type="text" ng-model="storeAddressFilter">
+					<span class="">状态：</span><select ng-model="currentStatusFilter" ng-options="status for status in statusList"></select>
 				</div>
 				<div class="filter_btns">
 					<button type="button" ng-click="search()">搜索</button>
 					<button type="button" ng-click="reset()">重置</button>
 					<button type="button" ng-click="delete()">批量删除</button>
-					<button type="button" ng-click="add()">新建</button>
+					<button type="button" ng-click="add('store-table')">新建</button>
 				</div>
 			</div>
 			<table class="data_table">
@@ -374,34 +374,34 @@
 		<pagination list="lists" pagefn="getOrderList" pageargs="pageSearchList" class="page-bar s3 jump-hide right ng-isolate-scope"></pagination>
 	</div>
 	<div class="cover">
-		<form enctype="multipart/form-data" action="" method="post" class="new_item_box">
-		    <table>
+		<form enctype="multipart/form-data" action="" method="post" class="new_item_box" name="store-datas">
+		    <table id="store-table">
 		        <tr>
 		            <td class="first_td"><label for="txtcode">门店编码：</label></td>
-		            <td><input type="text" id="txtcode" name="login_username" /><span class="red necessary_info">*必填</span></td>
+		            <td><input type="text" id="txtcode" name="storeCode" ng-model="storeCode" /><span class="red necessary_info">*必填</span></td>
 		        </tr>
 		        <tr>
 		            <td class="first_td"><label for="txtname">门店名称：</label></td>
-		            <td><input type="text" id="txtname" name="login_pswd" /><span class="red necessary_info">*必填</span></td>
+		            <td><input type="text" id="txtname" name="storeName" ng-model="storeName" /><span class="red necessary_info">*必填</span></td>
 		        </tr>
 		        <tr>
 		            <td class="first_td"><label for="txtpswd">地址：</label></td>
-		            <td><input type="text" id="txtpswd" name="login_pswd" /></td>
+		            <td><input type="text" id="txtpswd" name="storeAddress" ng-model="storeAddress" /></td>
 		        </tr>
 		        <tr>
-		        	<td class="first_td"><label for="txtpswd">电话：</label></td>
-		            <td><input type="text" id="txtpswd" name="login_pswd" /></td>
+		        	<td class="first_td"><label for="txtPhone">电话：</label></td>
+		            <td><input type="text" id="txtPhone" name="phone" ng-model="phone" /></td>
 		        </tr>
 		        <tr>
 		        	<td class="first_td"><label for="status">状态：</label></td>
 		        	<td class="first_td">
-		        		<input type="radio" name="status">正常
-		        		<input type="radio" name="status">关闭
+		        		<input type="radio" name="status" value="Y">正常
+		        		<input type="radio" name="status" value="N">关闭
 		        	</td>
 		        </tr>
 		    </table>
 		    <button type="button" ng-click="cancel()" class="add_btn_cancel">取消</button>
-			<button type="button" ng-click="save()" class="add_btn_save">保存</button>
+			<button type="button" ng-click="save('store-datas', 'store-table')" class="add_btn_save">保存</button>
 		</form>
 		
 	</div>
