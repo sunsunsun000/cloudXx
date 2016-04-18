@@ -64,7 +64,7 @@ var deleteItem = function(db, deleteLists, finish, result) {
                     if(err) throw err;
                     else {
                         if(deleteLists.length > 0) {
-                            deleteItem(db, deleteLists, result);
+                            deleteItem(db, deleteLists, finish, result);
                         } else {
                             db.close();
                             finish(result);
@@ -304,6 +304,7 @@ function handleIssueList (req, res) {
 
 
             db.open(function (err,db) {//连接数据库
+                console.log('打开数据库');
                 if(err)
                     throw err;
                 else{

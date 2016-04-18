@@ -24,9 +24,10 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
             pl: args.pl || 5,//分页栏显示页数
         };
 
+		temp.switch = !$scope.pageSearchList.switch;
         angular.extend(temp, args.filter || {});
+        // console.log($scope.pageSearchList == temp);
         $scope.pageSearchList = temp;
-        console.log($scope.pageSearchList);
 
         // $scope.pageSearchList = {
         //     ps: args.ps || 10,
@@ -100,7 +101,7 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 		console.log('123123123123123');
 		request(param).then(function() {
 			console.log('请求成功');
-			// reloadPage();
+			reloadPage();
 
 		},function(err) {
 			console.log('请求失败');
@@ -183,6 +184,7 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
         pn: 1,//当前显示的是第几页
         ps: 10,//每页显示多少条
         pl: 5,//分页栏显示页数
+        switch: true //用以在需要reload时做pageSearchList的修改~以便在pagination.js的指令中watch~从而调用getOrderList分页函数
     };
 
     /**

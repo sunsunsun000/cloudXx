@@ -70,10 +70,10 @@ app.directive("pagination", function() {
                 $scope.current = key;
                 $scope.pageNode = key;
                 $scope.pageargs.pn = key + 1;
-                $scope.pagefn($scope.pageargs, function(data) {
-                    $scope.pLen = Math.ceil(parseInt(data.pa.total) / $scope.pNum);
-                    $scope.keyListWatch();
-                });
+                // $scope.pagefn($scope.pageargs, function(data) {
+                //     $scope.pLen = Math.ceil(parseInt(data.pa.total) / $scope.pNum);
+                //     $scope.keyListWatch();
+                // });
             };
 
             $scope.next = function() {
