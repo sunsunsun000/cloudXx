@@ -156,24 +156,69 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 				datas[temp.attr('name')] = temp.val();
 			}
 		}
+		if($scope._id !== '') {
+			datas._id = $scope._id;
+
+			var param = {
+				url:'http://localhost:7999/get-data',
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				method: 'PUT',
+				data: datas
+			};
+			
+			request(param).then(function() {
+				console.log('请求成功');
+				$('.cover').hide();
+				reloadPage();
+				$scope._id = '';
+
+			},function(err) {
+				console.log(err);
+				$('.cover').hide();
+				$scope._id = '';
+			});
+
+		} else {
+			var param = {
+				url:'http://localhost:7999/get-data',
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				method: 'POST',
+				data: datas
+			};
+			
+			request(param).then(function() {
+				console.log('请求成功');
+				$('.cover').hide();
+				reloadPage();
+				$scope._id = '';
+
+			},function(err) {
+				console.log(err);
+				$('.cover').hide();
+				$scope._id = '';
+			});
+		}
 		console.log(datas);
 
-		var param = {
-			url:'http://localhost:7999/get-data',
-			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-			method: 'POST',
-			data: datas
-		};
 		
-		request(param).then(function() {
-			console.log('请求成功');
-			$('.cover').hide();
-			reloadPage();
+	}
 
-		},function(err) {
-			console.log(err);
-			$('.cover').hide();
-		});
+	$scope.edit = function(index) {
+		var item = $scope.lists[index];
+		$scope.storeCode = item.storeCode;
+		$scope.storeName = item.storeName;
+		$scope.storeAddress = item.storeAddress;
+		$scope.phone = item.phone;
+		console.log(item.status);
+		if(item.status == 'Y') {
+			$('#normal').attr('checked', true)
+		} else {
+			$('#closed').attr('checked', true);
+		}
+
+		$('.cover').show();
+
+		$scope._id = item._id
 	}
 
 	/**

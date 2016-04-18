@@ -96,8 +96,27 @@ var singleInsert = function(db, data, finish, param) {
     }); 
 }
 
+var update = function(db, data, finish, result) {
+    db.collection('users', function(err, collection) {
+        if(err) throw err;
+        else {
+            var id = ObjectID(data._id);
+            delete data._id;
+            collection.update({_id:id},{$set:data}
+                ,{safe:true},function(err,result) {
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        db.close();
+                        finish(result);
+                    }
+                });
+        }
+    });
+}
 
-db.once("close", function (err,db) {//关闭数据库
+
+db.on("close", function (err,db) {//关闭数据库
     if(err) throw err;
     else console.log("成功关闭数据库.");
 });
@@ -248,32 +267,55 @@ function handleIssueList (req, res) {
                 }
             });
             req.on('end', function () {
-                var params = parseParams(formData);
-                params.id = +params.id;
-                if (params.id) {
-                    readData('issue', function (data) {
-                        var flag = false;
-                        var target;
-                        data.forEach(function (item, index) {
-                            if (item.id == params.id) {
-                                flag = true;
-                                target = index;
-                            }
-                        });
-                        if (flag) {
-                            data[target] = params;
-                            writeData('issue', data, function () {
-                                finish(result);
-                            });
-                        } else {
-                            handleError({message: 'can not find id '+ params.id}, result);
-                        }
-                    });
-                } else {
-                    handleError({message: 'no id provided'}, result);
-                }
+
+                console.log('执行了');
+
+                db.open(function (err,db) {//连接数据库
+                    if(err)
+                        throw err;
+                    else{
+                        // console.log(formData);
+                        console.log(result);
+                        console.log(formData);
+                        update(db, JSON.parse(formData), finish, result);
+                    }
+                });
+
             });
             break;
+
+            // req.on('data', function (chunk) {
+            //     if (req.headers['content-type'].toLowerCase() == 'application/x-www-form-urlencoded') {
+            //         formData = formData + chunk.toString();
+            //     }
+            // });
+            // req.on('end', function () {
+            //     var params = parseParams(formData);
+            //     params.id = +params.id;
+            //     if (params.id) {
+            //         readData('issue', function (data) {
+            //             var flag = false;
+            //             var target;
+            //             data.forEach(function (item, index) {
+            //                 if (item.id == params.id) {
+            //                     flag = true;
+            //                     target = index;
+            //                 }
+            //             });
+            //             if (flag) {
+            //                 data[target] = params;
+            //                 writeData('issue', data, function () {
+            //                     finish(result);
+            //                 });
+            //             } else {
+            //                 handleError({message: 'can not find id '+ params.id}, result);
+            //             }
+            //         });
+            //     } else {
+            //         handleError({message: 'no id provided'}, result);
+            //     }
+            // });
+            // break;
         }
         case 'GET':
         default: {
