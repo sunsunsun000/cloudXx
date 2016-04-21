@@ -9,10 +9,10 @@
 <body ng-controller="baseDataStoreCtrl">
 	<div class="main">
 		<div class="header">
-			<div class="login_box">
+			<div class="user_box">
 				<a href="#" class="icon_home">xxx-主页</a>
 				<div class="user_info">
-					<span class="user_name">user-name</span>,欢迎您使用xxx店进销存.
+					<span class="user_name">{{userName}}</span>,欢迎您使用xxx店进销存.
 					<a href="#" class="my_account">我的账号</a><i>|</i><a href="#" class="log_out">注销登陆</a>
 				</div>
 			</div>
@@ -404,6 +404,28 @@
 			<button type="button" ng-click="save('store-datas', 'store-table')" class="add_btn_save">保存</button>
 		</form>
 		
+	</div>
+
+	<div class="login">
+		<div class="login_box">
+			<h2 class="title">登陆</h2>
+			<table class="login_table">
+				<tr>
+					<td class="first_td">用户名：</td>
+					<td><input type="text" placeholder="用户名" ng-model="username"></td>
+				</tr>
+				<tr>
+					<td class="first_td">密码：</td>
+					<td><input type="password" placeholder="密码" ng-model="password"></td>
+				</tr>
+			</table>
+			<div class="btn_box">
+				<button type="button" ng-click="login()">登陆</button>
+				<button type="button">
+					<a href="./login.html">取消</a>
+				</button>
+			</div>
+		</div>
 	</div>
 	<script src="js/jquery-1.9.1.js"></script>
 	<script src="js/angular.js"></script>

@@ -36,6 +36,87 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
         // };
     }
 
+    var getCookie = function(cookieName) {
+    	tookenIndex = document.cookie.indexOf("tooken");
+    	if(tookenIndex == -1) {
+    		return -1;
+    	} else {
+    		var cookies = document.cookie.split('; ');
+    		for(var i = 0, len = cookies.length; i < len; i++) {
+    			if(cookies[i].indexOf('tooken') >=0) {
+    				return cookies[i].split('=')[1];
+    			}
+    		}
+    		
+    	}
+    }
+
+    var isLoad = function() {
+    	var tooken = getCookie('tooken');
+    	if(tooken == -1) {//本地为保存有此用户的登陆信息~即未登录~
+		 	console.log('未登录');
+		 	$('div.login').css('display','block');
+		 } else {
+		 	var param = {
+				url:'http://localhost:7999/get-data',
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				method: 'POST',
+				data: {
+					tooken:tooken,
+					loginRequest:true
+				}
+			};
+
+			request(param).then(function(rs) {
+				console.log('请求成功');
+				if(!!rs.isLogin) {
+					console.log('tooken有效');
+				} else {
+					console.log('tooken失效');
+					$('div.login').css('display','block');
+				}
+
+			},function(err) {
+				console.log('请求失败');
+				console.log(err);
+			});
+		 }
+    }
+
+
+    $scope.login = function() {
+    	var loginInfo = {
+    		islogin: true,
+    		name:$scope.username,
+    		pwd:$scope.password
+    	};
+
+    	var param = {
+    		url:'http://localhost:7999/get-data',
+    		headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    		method: 'POST',
+    		data: loginInfo
+    	};
+
+    	request(param).then(function(rs) {
+    		console.log('请求成功');
+    		if(!!rs.isLogin) {
+    			alert('登陆成功');
+    			$scope.userName = $scope.username;
+    			$('div.login').css('display','none');
+
+    		} else{
+    			alert('登陆失败');
+    		}
+    	}, function(err) {
+    		console.log('请求失败');
+    		console.log(err);
+    	});
+
+    }
+
+    isLoad();
+
 
 	/**
 	 * 批量选中按钮事件处理函数

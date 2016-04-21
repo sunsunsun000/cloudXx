@@ -15,45 +15,53 @@ var port=27017;//mongo.Connection.DEFAULT_PORT;
 var server=new mongo.Server(host,port,{auto_reconnect:true});//创建数据库所在的服务器服务器
 var db=new mongo.Db("node-mongo-examples2",server,{safe:true});//创建数据库对象
 
-var getData = function(db, filter, success) {
-    db.collection("users", function (err,collection) {
+var getData = function(db, collectionName, filter, success) {
+    console.log(collectionName);
+    db.collection(collectionName, function (err,collection) {
         if(err) throw err;
         else{
 
             console.log(filter,'111111111111');
+            console.log(typeof filter);
             collection.find(filter).toArray(function(err,docs){
-                if(err) throw  err;
+                if(err) throw err;
                 else{
-                    db.close();
+                    console.log('--------------------------');
+                    console.log(docs);
                     success(docs);
+
                 }
             });
         }
     });
 };
+
+var isTookenRight = function(db, collectionName, filter, finish, param) {
+    db.collection(collectionName, function(err, collection) {
+        if(err) throw err;
+        else {
+            filter.tooken = '';
+            console.log(filter);
+            collection.find(filter).toArray(function(err,docs){
+                if(err) throw err;
+                else {
+                    // db.close();
+                    if(docs.length == 0) {
+                        //{ code: 0, errMsg: undefined }
+                        param.isLogin = false;
+                        finish(param);
+                    } else {
+                        param.isLogin = true;
+                        finish(param);
+                    }
+                }
+            });
+        }
+    })
+};
+
 var deleteItem = function(db, deleteLists, finish, result) {
 
-    // db.collection('users', function(err, collection) {
-    //     if(err) throw err;
-    //         else {
-                
-    //             collection.remove({_id: ObjectID('5712189a63c042b0274fe31c')}, function(err,result) {
-    //                 if(err) throw err;
-    //                 else {
-    //                     console.log(result);
-    //                     db.close();
-    //                 }
-                    
-
-    //             })
-    //         }
-    //     })
-
-
-
-
-
-    console.log(deleteLists,'XXXXXXXXXXXXXX');
     if(deleteLists.length > 0) {
         db.collection('users', function(err, collection) {
         if(err) throw err;
@@ -76,7 +84,8 @@ var deleteItem = function(db, deleteLists, finish, result) {
         })
     }
     
-}
+};
+
 var singleInsert = function(db, data, finish, param) {
     db.collection("users", function (err,collection) {
         // console.log(data,'-------------------------');
@@ -94,10 +103,11 @@ var singleInsert = function(db, data, finish, param) {
         }
         
     }); 
-}
+};
 
-var update = function(db, data, finish, result) {
-    db.collection('users', function(err, collection) {
+var update = function(db, collectionName, data, finish, result) {
+    console.log(collectionName, data);
+    db.collection(collectionName, function(err, collection) {
         if(err) throw err;
         else {
             var id = ObjectID(data._id);
@@ -108,13 +118,15 @@ var update = function(db, data, finish, result) {
                         console.log(err);
                     } else {
                         db.close();
-                        finish(result);
+                        if(finish) {
+                            finish(result);
+                        }
+                        
                     }
                 });
         }
     });
-}
-
+};
 
 db.on("close", function (err,db) {//关闭数据库
     if(err) throw err;
@@ -196,32 +208,6 @@ function handleIssueList (req, res) {
                     }
                 });
                 
-                
-
-
-
-                // if (params.id) {
-                //     readData('issue', function (data) {
-                //         var flag = false;
-                //         var target;
-                //         data.forEach(function (item, index) {
-                //             if (item.id == params.id) {
-                //                 flag = true;
-                //                 target = index;
-                //             }
-                //         });
-                //         if (flag) {
-                //             data.splice(target, 1);
-                //             writeData('issue', data, function () {
-                //                 finish(result);
-                //             });
-                //         } else {
-                //             handleError({message: 'can not find id '+ params.id}, result);
-                //         }
-                //     });
-                // } else {
-                //     handleError({message: 'no id provided'}, result);
-                // }
             });
             break;
         }
@@ -232,31 +218,40 @@ function handleIssueList (req, res) {
                 }
             });
             req.on('end', function () {
-                var params = parseParams(formData);
-                console.log('执行了');
-
+                // var params = parseParams(formData);
+                formData = JSON.parse(formData);
+                console.log(formData,'aaaaaaaaaaaaaaa');
                 db.open(function (err,db) {//连接数据库
                     if(err)
                         throw err;
                     else{
-                        // console.log(formData);
-                        console.log(result);
-                        console.log(formData);
-                        singleInsert(db, JSON.parse(formData), finish, result);
+                        if(formData.loginRequest) {
+                            console.log(formData.loginRequest,'1111118888888888888888881111111111');
+                            isTookenRight(db,'user2',{tooken:formData.tooken}, finish, result);
+                        } else if(formData.islogin) {
+
+                            getData(db, 'user2', {name: formData.name,pwd:formData.pwd}, function(rs) {
+                                if(rs.length <= 0) {
+
+                                    result.isLogin = false;
+                                    finish(result);
+
+                                } else {
+                                    result.isLogin = true;
+                                    result.tooken = new Date().getTime();
+
+                                    update(db, 'user2', {_id:rs[0]._id, name: formData.name,pwd:formData.pwd, tooken:result.tooken});
+                                    finish(result);
+                                }
+                            });
+
+                        } else {
+                            singleInsert(db, formData, finish, result);
+                        }
+                        // singleInsert(db, JSON.parse(formData), finish, result);
                     }
                 });
 
-
-
-                // readData('issue', function (data) {
-                //     var length = data.length;
-                //     params.id = data[length - 1] ? data[length - 1].id + 1 : 1;
-                //     data.push(params);
-                //     console.log(params);
-                //     writeData('issue', data, function () {
-                //         finish(result);
-                //     });
-                // });
             });
             break;
         }
@@ -268,7 +263,7 @@ function handleIssueList (req, res) {
             });
             req.on('end', function () {
 
-                console.log('执行了');
+                console.log('执行了123123');
 
                 db.open(function (err,db) {//连接数据库
                     if(err)
@@ -283,39 +278,6 @@ function handleIssueList (req, res) {
 
             });
             break;
-
-            // req.on('data', function (chunk) {
-            //     if (req.headers['content-type'].toLowerCase() == 'application/x-www-form-urlencoded') {
-            //         formData = formData + chunk.toString();
-            //     }
-            // });
-            // req.on('end', function () {
-            //     var params = parseParams(formData);
-            //     params.id = +params.id;
-            //     if (params.id) {
-            //         readData('issue', function (data) {
-            //             var flag = false;
-            //             var target;
-            //             data.forEach(function (item, index) {
-            //                 if (item.id == params.id) {
-            //                     flag = true;
-            //                     target = index;
-            //                 }
-            //             });
-            //             if (flag) {
-            //                 data[target] = params;
-            //                 writeData('issue', data, function () {
-            //                     finish(result);
-            //                 });
-            //             } else {
-            //                 handleError({message: 'can not find id '+ params.id}, result);
-            //             }
-            //         });
-            //     } else {
-            //         handleError({message: 'no id provided'}, result);
-            //     }
-            // });
-            // break;
         }
         case 'GET':
         default: {
@@ -350,7 +312,7 @@ function handleIssueList (req, res) {
                 if(err)
                     throw err;
                 else{
-                    getData(db, filter, function(rs) {
+                    getData(db, 'users', filter, function(rs) {
                         data.total = rs.length;
                         data.data = rs.slice(data.pageSize * (data.pageNum - 1), data.pageSize * data.pageNum);
                         result.data = data;

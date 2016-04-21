@@ -26,6 +26,11 @@ ul {
 	overflow: hidden;
 }
 
+input {
+	outline: none;
+	border: 1px solid #ccc;
+}
+
 /*-----------------------------------------------------table样式---------------------------------------------------*/
 table {
 	border-collapse:collapse 
@@ -45,7 +50,7 @@ table th {
 }
 
 /*-------------------------------------------------顶部用户信息样式---------------------------------------------------*/
-.login_box {
+.user_box {
 	height: 37px;
 	line-height: 37px;
 	padding: 0px 15px;
@@ -343,4 +348,55 @@ em {
 }
 .necessary_info {
 	margin-left: 10px;
+}
+
+/*-----------------------------------登陆弹出框样式-----------------------------------*/
+.login {
+	display: none;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.8);
+	text-align: center;
+}
+.login_box {
+	position: absolute;
+	width: 320px;
+	height: 320px;
+	top: 50%;
+	left: 50%;
+	margin-top: -160px;
+	margin-left: -160px;
+	background: #fff;
+	border-radius: 6px;
+}
+.login_table {
+	margin-top: 20px;
+	margin-bottom: 30px;
+}
+.login_table td {
+	border: none;
+	width: 200px;
+	padding: 10px 0;
+	text-align: left;
+}
+
+.login_table input {
+	height: 32px;
+	width: 90%;
+}
+.login_table .first_td {
+	text-align: right;
+	width: 90px;
+}
+.btn_box {
+	width: 100%;
+	text-align: center;
+}
+.btn_box button {
+	display: inline-block;
+	width: 32%;
+	height: 32px;
 }

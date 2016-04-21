@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="common-style/common-style.css">
+	<link rel="stylesheet" href="login/login.css">
+	<title>登录页</title>
+</head>
+<body ng-controller="loginCtrl">
+	<div class="login">
+		<div class="login_box">
+			<h2 class="title">登录</h2>
+			<table class="login_table">
+				<tr>
+					<td class="first_td">用户名：</td>
+					<td><input type="text" placeholder="用户名" ng-model="username"></td>
+				</tr>
+				<tr>
+					<td class="first_td">密码：</td>
+					<td><input type="password" placeholder="密码" ng-model="password"></td>
+				</tr>
+			</table>
+			<div class="btn_box">
+				<button type="button" ng-click="login()">登陆</button>
+				<button type="button">
+					<a href="./login.html">取消</a>
+				</button>
+			</div>
+		</div>
+	</div>
+	<script src="js/jquery-1.9.1.js"></script>
+	<script src="js/angular.js"></script>
+	<script src="js/common.js"></script>
+	<script src="service/request.js"></script>
+	<script src="login/login.js"></script>
+</body>
+</html>
