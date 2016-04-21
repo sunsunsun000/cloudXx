@@ -36,6 +36,11 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
         // };
     }
 
+    /**
+     * 根据指定的cookie名返回对应的cookie值
+     * @param  {[type]} cookieName [description]
+     * @return {[type]}            [description]
+     */
     var getCookie = function(cookieName) {
     	tookenIndex = document.cookie.indexOf("tooken");
     	if(tookenIndex == -1) {
@@ -51,6 +56,10 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
     	}
     }
 
+    /**
+     * 判断用户当前是否是登录状态
+     * @return {Boolean} [description]
+     */
     var isLoad = function() {
     	var tooken = getCookie('tooken');
     	if(tooken == -1) {//本地为保存有此用户的登陆信息~即未登录~
@@ -83,7 +92,10 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 		 }
     }
 
-
+    /**
+     * 发送用户名和密码到后台
+     * @return {[type]} [description]
+     */
     $scope.login = function() {
     	var loginInfo = {
     		islogin: true,
@@ -102,6 +114,8 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
     		console.log('请求成功');
     		if(!!rs.isLogin) {
     			alert('登陆成功');
+    			setCookie('tooken', rs.tooken);
+    			// document.cookie = "tooken=" + rs.tooken;
     			$scope.userName = $scope.username;
     			$('div.login').css('display','none');
 
@@ -116,6 +130,62 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
     }
 
     isLoad();
+
+
+    /**
+     * 删除cookie
+     * @param  {[type]} name [description]
+     * @return {[type]}      [description]
+     */
+    var delCookie = function (name){//为了删除指定名称的cookie，可以将其过期时间设定为一个过去的时间
+	   var date = new Date();
+	   date.setTime(date.getTime() - 10000);
+	   document.cookie = name + "=a; expires=" + date.toGMTString();
+	};
+
+	/**
+	 * 设置cookie
+	 * @param {[type]} name  [description]
+	 * @param {[type]} value [description]
+	 */
+	var setCookie = function (name, value) {
+	    var argv = arguments;
+	    var argc = arguments.length;
+	    var expires = (argc > 2) ? argv[2] : null;
+	    var path = (argc > 3) ? argv[3] : '/';
+	    var domain = (argc > 4) ? argv[4] : null;
+	    var secure = (argc > 5) ? argv[5] : false;
+	    document.cookie = name + "=" + escape(value) +
+	       ((expires == null) ? "" : ("; expires=" + expires.toGMTString())) +
+	       ((path == null) ? "" : ("; path=" + path)) +
+	       ((domain == null) ? "" : ("; domain=" + domain)) +
+	       ((secure == true) ? "; secure" : "");
+	};
+
+    /**
+     * 退出登录
+     * @return {[type]} [description]
+     */
+    $scope.signOut = function() {
+    	var tooken = getCookie('tooken');
+    	var param = {
+    		url:'http://localhost:7999/get-data',
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			method: 'POST',
+			data: {
+				tooken:tooken,
+				signOut:true
+			}
+		};
+
+		request(param).then(function() {
+			console.log('请求发送成功');
+			delCookie('tooken');
+			$('div.login').show();
+		}, function(err) {
+			console.log(err);
+		});
+    }
 
 
 	/**

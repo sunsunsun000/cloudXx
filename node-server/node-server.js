@@ -21,13 +21,9 @@ var getData = function(db, collectionName, filter, success) {
         if(err) throw err;
         else{
 
-            console.log(filter,'111111111111');
-            console.log(typeof filter);
             collection.find(filter).toArray(function(err,docs){
                 if(err) throw err;
                 else{
-                    console.log('--------------------------');
-                    console.log(docs);
                     success(docs);
 
                 }
@@ -41,13 +37,13 @@ var isTookenRight = function(db, collectionName, filter, finish, param) {
         if(err) throw err;
         else {
             filter.tooken = '';
-            console.log(filter);
+
             collection.find(filter).toArray(function(err,docs){
                 if(err) throw err;
                 else {
                     // db.close();
                     if(docs.length == 0) {
-                        //{ code: 0, errMsg: undefined }
+
                         param.isLogin = false;
                         finish(param);
                     } else {
@@ -88,10 +84,8 @@ var deleteItem = function(db, deleteLists, finish, result) {
 
 var singleInsert = function(db, data, finish, param) {
     db.collection("users", function (err,collection) {
-        // console.log(data,'-------------------------');
         if(err) throw err;
         else {
-            console.log(data);
             collection.insert(data, function(err, docs) {
                 if(err) {
                     console.log(err);
@@ -127,6 +121,27 @@ var update = function(db, collectionName, data, finish, result) {
         }
     });
 };
+
+var loginOut = function(db, collectionName, data, finish, result) {
+    db.collection(collectionName, function(err, collection) {
+        if(err) {
+            throw err;
+        } else {
+            console.log(data,'11111111111111111');
+            collection.update(data, {$set: {tooken:''}}, {safe:true}, function(err, result) {
+                if(err) {
+                    console.log(err);
+                } else {
+                    console.log(result);
+                    db.close();
+                    if(finish) {
+                        finish(result);
+                    }
+                }
+            })
+        }
+    });
+}
 
 db.on("close", function (err,db) {//关闭数据库
     if(err) throw err;
@@ -193,12 +208,8 @@ function handleIssueList (req, res) {
                 var deleteLists = [];
 
                 var params = formData;
-                console.log(params);
-                params = eval ("(" + params + ")");
 
-                // for(var i  = 0, len = params.length; i < len; i++) {
-                //     console.log(params[i]);
-                // }
+                params = eval ("(" + params + ")");
                 
                 db.open(function (err,db) {//连接数据库
                     if(err)
@@ -218,18 +229,18 @@ function handleIssueList (req, res) {
                 }
             });
             req.on('end', function () {
-                // var params = parseParams(formData);
+
                 formData = JSON.parse(formData);
-                console.log(formData,'aaaaaaaaaaaaaaa');
+
                 db.open(function (err,db) {//连接数据库
                     if(err)
                         throw err;
                     else{
                         if(formData.loginRequest) {
-                            console.log(formData.loginRequest,'1111118888888888888888881111111111');
+
                             isTookenRight(db,'user2',{tooken:formData.tooken}, finish, result);
                         } else if(formData.islogin) {
-
+                            //判断用户的登录信息是否正确
                             getData(db, 'user2', {name: formData.name,pwd:formData.pwd}, function(rs) {
                                 if(rs.length <= 0) {
 
@@ -245,6 +256,9 @@ function handleIssueList (req, res) {
                                 }
                             });
 
+                        } else if(formData.signOut) {
+
+                            loginOut(db, 'user2', {tooken: +formData.tooken}, finish, result);
                         } else {
                             singleInsert(db, formData, finish, result);
                         }
@@ -263,15 +277,11 @@ function handleIssueList (req, res) {
             });
             req.on('end', function () {
 
-                console.log('执行了123123');
-
                 db.open(function (err,db) {//连接数据库
                     if(err)
                         throw err;
                     else{
-                        // console.log(formData);
-                        console.log(result);
-                        console.log(formData);
+
                         update(db, JSON.parse(formData), finish, result);
                     }
                 });
@@ -281,8 +291,7 @@ function handleIssueList (req, res) {
         }
         case 'GET':
         default: {
-            console.log(params,'---------------------');
-            
+
             var data = {
                 list: [],
                 total: 0, 
