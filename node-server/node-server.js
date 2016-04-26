@@ -4,152 +4,11 @@
  */
 var http = require('http');
 var path = require('path');
-var app = http.createServer();
 var fs = require('fs');
 var url = require('url');
+var dbHelper = require('./dbHelper');
 
-var mongo=require("mongodb");
-var ObjectID = require("mongodb").ObjectID;
-var host="localhost";
-var port=27017;//mongo.Connection.DEFAULT_PORT;
-var server=new mongo.Server(host,port,{auto_reconnect:true});//创建数据库所在的服务器服务器
-var db=new mongo.Db("node-mongo-examples2",server,{safe:true});//创建数据库对象
-
-var getData = function(db, collectionName, filter, success) {
-    console.log(collectionName);
-    db.collection(collectionName, function (err,collection) {
-        if(err) throw err;
-        else{
-
-            collection.find(filter).toArray(function(err,docs){
-                if(err) throw err;
-                else{
-                    success(docs);
-
-                }
-            });
-        }
-    });
-};
-
-var isTookenRight = function(db, collectionName, filter, finish, param) {
-    db.collection(collectionName, function(err, collection) {
-        if(err) throw err;
-        else {
-            filter.tooken = '';
-
-            collection.find(filter).toArray(function(err,docs){
-                if(err) throw err;
-                else {
-                    // db.close();
-                    if(docs.length == 0) {
-
-                        param.isLogin = false;
-                        finish(param);
-                    } else {
-                        param.isLogin = true;
-                        finish(param);
-                    }
-                }
-            });
-        }
-    })
-};
-
-var deleteItem = function(db, deleteLists, finish, result) {
-
-    if(deleteLists.length > 0) {
-        db.collection('users', function(err, collection) {
-        if(err) throw err;
-            else {
-                var id = deleteLists.pop()['_id'];
-                
-                collection.remove({_id: ObjectID(id)}, function(err,result) {
-                    if(err) throw err;
-                    else {
-                        if(deleteLists.length > 0) {
-                            deleteItem(db, deleteLists, finish, result);
-                        } else {
-                            db.close();
-                            finish(result);
-                        }
-                    }
-                    
-                })
-            }
-        })
-    }
-    
-};
-
-var singleInsert = function(db, data, finish, param) {
-    db.collection("users", function (err,collection) {
-        if(err) throw err;
-        else {
-            collection.insert(data, function(err, docs) {
-                if(err) {
-                    console.log(err);
-                } else {
-                    db.close();
-                    finish(param);
-                }
-            });
-        }
-        
-    }); 
-};
-
-var update = function(db, collectionName, data, finish, result) {
-    console.log(collectionName, data);
-    db.collection(collectionName, function(err, collection) {
-        if(err) throw err;
-        else {
-            var id = ObjectID(data._id);
-            delete data._id;
-            collection.update({_id:id},{$set:data}
-                ,{safe:true},function(err,result) {
-                    if(err) {
-                        console.log(err);
-                    } else {
-                        db.close();
-                        if(finish) {
-                            finish(result);
-                        }
-                        
-                    }
-                });
-        }
-    });
-};
-
-var loginOut = function(db, collectionName, data, finish, result) {
-    db.collection(collectionName, function(err, collection) {
-        if(err) {
-            throw err;
-        } else {
-            console.log(data,'11111111111111111');
-            collection.update(data, {$set: {tooken:''}}, {safe:true}, function(err, result) {
-                if(err) {
-                    console.log(err);
-                } else {
-                    console.log(result);
-                    db.close();
-                    if(finish) {
-                        finish(result);
-                    }
-                }
-            })
-        }
-    });
-}
-
-db.on("close", function (err,db) {//关闭数据库
-    if(err) throw err;
-    else console.log("成功关闭数据库.");
-});
-
-
-
+var app = http.createServer();
 
 function parseParams (string) {
     var arr = string.split('&');
@@ -163,24 +22,7 @@ function parseParams (string) {
 
 
 function handleIssueList (req, res) {
-    function readData(type, cb) {
-        fs.readFile(path.resolve(__dirname, type + '.json'), function (err,data) {
-            if (err) {
-                handleError(err, result);
-            } else {
-                cb(JSON.parse(data));
-            }
-        });
-    }
-    function writeData(type, data, cb) {
-        fs.writeFile(path.resolve(__dirname, type +'.json'), JSON.stringify(data), function (err) {
-            if (err) {
-                handleError(err, result);
-            } else {
-                cb();
-            }
-        });
-    }
+
     function finish(obj) {
         res.end(JSON.stringify(obj));
     }
@@ -211,13 +53,7 @@ function handleIssueList (req, res) {
 
                 params = eval ("(" + params + ")");
                 
-                db.open(function (err,db) {//连接数据库
-                    if(err)
-                        throw err;
-                    else{
-                        deleteItem(db, params, finish, result);
-                    }
-                });
+                dbHelper.deleteItem('users', params, finish, result);
                 
             });
             break;
@@ -232,39 +68,44 @@ function handleIssueList (req, res) {
 
                 formData = JSON.parse(formData);
 
-                db.open(function (err,db) {//连接数据库
-                    if(err)
-                        throw err;
-                    else{
-                        if(formData.loginRequest) {
+                if(formData.loginRequest) {
 
-                            isTookenRight(db,'user2',{tooken:formData.tooken}, finish, result);
-                        } else if(formData.islogin) {
-                            //判断用户的登录信息是否正确
-                            getData(db, 'user2', {name: formData.name,pwd:formData.pwd}, function(rs) {
-                                if(rs.length <= 0) {
+                    dbHelper.getData('user2', {tooken:formData.tooken}, function(rs) {
 
-                                    result.isLogin = false;
-                                    finish(result);
+                        if(rs.length <= 0) {
 
-                                } else {
-                                    result.isLogin = true;
-                                    result.tooken = new Date().getTime();
-
-                                    update(db, 'user2', {_id:rs[0]._id, name: formData.name,pwd:formData.pwd, tooken:result.tooken});
-                                    finish(result);
-                                }
-                            });
-
-                        } else if(formData.signOut) {
-
-                            loginOut(db, 'user2', {tooken: +formData.tooken}, finish, result);
+                            result.isLogin = false;
+                            finish(result);
                         } else {
-                            singleInsert(db, formData, finish, result);
+                            param.isLogin = true;
+                            finish(param);
                         }
-                        // singleInsert(db, JSON.parse(formData), finish, result);
-                    }
-                });
+                    });
+                } else if(formData.islogin) {
+                    //判断用户的登录信息是否正确
+                    dbHelper.getData('user2', {name: formData.name,pwd:formData.pwd}, function(rs) {
+                        if(rs.length <= 0) {
+
+                            result.isLogin = false;
+                            finish(result);
+
+                        } else {
+                            result.isLogin = true;
+                            result.tooken = new Date().getTime();
+
+                            dbHelper.update('user2', {_id:rs[0]._id, name: formData.name,pwd:formData.pwd, tooken:result.tooken});
+                            finish(result);
+                        }
+                    });
+
+                } else if(formData.signOut) {
+
+                    dbHelper.update('user2', {_id:formData._id, tooken: +formData.tooken}, finish, result);
+                } else {
+                    console.log('插入数据');
+                    console.log(formData);
+                    dbHelper.singleInsert('users', formData, finish, result);
+                }
 
             });
             break;
@@ -276,16 +117,9 @@ function handleIssueList (req, res) {
                 }
             });
             req.on('end', function () {
-
-                db.open(function (err,db) {//连接数据库
-                    if(err)
-                        throw err;
-                    else{
-
-                        update(db, JSON.parse(formData), finish, result);
-                    }
-                });
-
+                console.log('更新数据');
+                console.log(formData);
+                dbHelper.update('users', JSON.parse(formData), finish, result);
             });
             break;
         }
@@ -315,204 +149,16 @@ function handleIssueList (req, res) {
                 filter.status = decodeURI(params.status);
             }
 
-
-            db.open(function (err,db) {//连接数据库
-                console.log('打开数据库');
-                if(err)
-                    throw err;
-                else{
-                    getData(db, 'users', filter, function(rs) {
-                        data.total = rs.length;
-                        data.data = rs.slice(data.pageSize * (data.pageNum - 1), data.pageSize * data.pageNum);
-                        result.data = data;
-                        finish(result);  
-                    });
-                }
+            dbHelper.getData('users', filter, function(rs) {
+                data.total = rs.length;
+                data.data = rs.slice(data.pageSize * (data.pageNum - 1), data.pageSize * data.pageNum);
+                result.data = data;
+                finish(result);  
             });
         }
     }
 }
 var index = 0;
-
-function handleCommentList (req, res) {
-    function readData(type, cb) {
-        fs.readFile(path.resolve(__dirname, type + '.json'), function (err,data) {
-            if (err) {
-                handleError(err, result);
-            } else {
-                cb(JSON.parse(data));
-            }
-        });
-    }
-    function writeData(type, data, cb) {
-        fs.writeFile(path.resolve(__dirname, type +'.json'), JSON.stringify(data), function (err) {
-            if (err) {
-                handleError(err, result);
-            } else {
-                cb();
-            }
-        });
-    }
-    function finish(obj) {
-        res.end(JSON.stringify(obj));
-    }
-    function handleError (err, result) {
-        result.code = -1;
-        result.errMsg = err.message;
-        finish(result);
-    }
-    var parsed = url.parse(req.url);
-    var params = parseParams((parsed.search || '').substr(1));
-    var result = {
-        code: 0,
-        errMsg: undefined
-    };
-    var formData = '';
-    switch (req.method.toUpperCase()) {
-        case 'DELETE': {
-            req.on('data', function (chunk) {
-                if (req.headers['content-type'].toLowerCase() == 'application/x-www-form-urlencoded') {
-                    formData = formData + chunk.toString();
-                }
-            });
-            req.on('end', function () {
-                var params = parseParams(formData);
-                if (params.id) {
-                    readData('comment', function (data) {
-                        var flag = false;
-                        var target;
-                        data.forEach(function (item, index) {
-                            if (item.id == params.id) {
-                                flag = true;
-                                target = index;
-                            }
-                        });
-                        if (flag) {
-                            data.splice(target, 1);
-                            writeData('comment', data, function () {
-                                finish(result);
-                            });
-                        } else {
-                            handleError({message: 'can not find id '+ params.id}, result);
-                        }
-                    });
-                } else {
-                    handleError({message: 'no id provided'}, result);
-                }
-            });
-            break;
-        }
-        case 'POST': {
-            req.on('data', function (chunk) {
-                if (req.headers['content-type'].toLowerCase() == 'application/x-www-form-urlencoded') {
-                    formData = formData + chunk.toString();
-                }
-            });
-            req.on('end', function () {
-                var params = parseParams(formData);
-                params.issueId = +params.issueId;
-                if (!params.issueId) {
-                    handleError({message: 'no issue id provided'}, result);
-                } else {
-                    readData('issue', function (data) {
-                        var flag = false;
-                        data.forEach(function (item) {
-                            if (item.id == params.issueId) {
-                                flag = true;
-                            }
-                        });
-                        if (!flag) {
-                            handleError({message: 'can not find issue by id '+ params.issueId}, result);
-                            return;
-                        }
-                        readData('comment', function (data) {
-                            var length = data.length;
-                            params.id = data[length - 1] ? data[length - 1].id + 1 : 1;
-                            data.push(params);
-                            writeData('comment', data, function () {
-                                finish(result);
-                            });
-                        });
-                    });
-                }
-            });
-            break;
-        }
-        case 'PUT': {
-            req.on('data', function (chunk) {
-                if (req.headers['content-type'].toLowerCase() == 'application/x-www-form-urlencoded') {
-                    formData = formData + chunk.toString();
-                }
-            });
-            req.on('end', function () {
-                var params = parseParams(formData);
-                params.id = +params.id;
-                if (params.id) {
-                    readData('comment', function (data) {
-                        var flag = false;
-                        var target;
-                        data.forEach(function (item, index) {
-                            if (item.id == params.id) {
-                                flag = true;
-                                target = index;
-                            }
-                        });
-                        if (flag) {
-                            data[target] = params;
-                            writeData('comment', data, function () {
-                                finish(result);
-                            });
-                        } else {
-                            handleError({message: 'can not find id '+ params.id}, result);
-                        }
-                    });
-                } else {
-                    handleError({message: 'no id provided'}, result);
-                }
-            });
-            break;
-        }
-        case 'GET':
-        default: {
-            var data = {
-                list: [],
-                total: 0, 
-                pageSize: +params.pageSize || 10, 
-                pageNum: +params.pageNum || 1
-            };
-            params.issueId = +params.issueId;
-            if (params.issueId) {
-                fs.readFile(path.resolve(__dirname, 'comment.json'), function (err, d) {
-                    if (err) {
-                        if (err.code === 'ENOENT') {
-                            fs.writeFile(path.resolve(__dirname, 'comment.json'), '[]', function (err) {
-                                if (err) {
-                                    handleError(err, result);
-                                    return;
-                                }
-                                result.data = data;
-                                finish(result);
-                            });
-                        } else {
-                            handleError(err, result);
-                        }
-                    } else {
-                        var parsedData = JSON.parse(d);
-                        parsedData = parsedData.filter(function (item) {
-                            return item.issueId == params.issueId;
-                        });
-                        data.data = parsedData.slice(data.pageSize * (data.pageNum - 1), data.pageSize * data.pageNum);
-                        data.total = parsedData.length;
-                        result.data = data;
-                        finish(result);
-                    }
-                });
-            } else {
-                handleError({message: 'no issueId provided'}, result);
-            }
-        }
-    }
-}
 
 app.on('request', function (req, res) {
 
