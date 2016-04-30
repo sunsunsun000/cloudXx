@@ -174,7 +174,8 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 			method: 'POST',
 			data: {
 				tooken:tooken,
-				signOut:true
+				signOut:true,
+				_id:item['_id']
 			}
 		};
 
@@ -263,7 +264,7 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 
 		console.log(deleteLists);
 		
-		//todo---------------------发送待删除数据的id到后台
+		$scope.selectAll();
 	};
 
 	/**
@@ -288,6 +289,8 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 		$('.cover').hide();
 	}
 
+	console.log($scope._id);
+
 	/**
 	 * 在新建数据弹出层点击取消保存时事件响应函数
 	 * @return {[type]} [description]
@@ -307,7 +310,9 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 				datas[temp.attr('name')] = temp.val();
 			}
 		}
-		if($scope._id !== '') {
+		console.log($scope._id);
+		if($scope._id && $scope._id !== '') {
+			console.log('更新数据');
 			datas._id = $scope._id;
 
 			var param = {
@@ -330,6 +335,7 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 			});
 
 		} else {
+			console.log('插入数据');
 			var param = {
 				url:'http://localhost:7999/get-data',
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
