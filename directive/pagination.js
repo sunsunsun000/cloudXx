@@ -1,16 +1,6 @@
 app.directive("pagination", function() {
     return {
-        template: '<div class="page-bar" ng-show="list.length>0">' + 
-            '<a href="javascript:;" ng-class="current<=0?\'disabled\':\'\'" ng-click="prev()"><em class="emic">&lt;</em><em class="emf"></em></a>' +
-            '<a href="javascript:;" ng-repeat="key in keyList" ng-class="key==current ? \'cur\' : \'\'" ng-click="jump(key)">{{key+1}}</a>' +
-            '<span ng-show="pLen>pMax && !hideEllipsis">...</span>' +
-            '<a href="javascript:;" ng-class="current>=pLen-1?\'disabled\':\'\'" ng-click="next()"><em class="emf"></em><em class="emic">&gt;</em></a>' +
-            '<span class="jump-bar">' +
-            '<span>共<font class="blue-c">{{pLen}}</font>页</span>' +
-            '<span>跳到<input type="text" style="width:38px;height:18px;text-align:center;margin:0 5px;" ng-model="goKey">页</span>' +
-            '<a href="" ng-click="go(goKey)">GO</a>' +
-            '</span>' +
-            '</div>',
+        templateUrl: 'directive/pagination.html',
         restrict: "E",
         replace: true,
         transclude: true,
