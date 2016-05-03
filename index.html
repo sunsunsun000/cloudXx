@@ -13,7 +13,7 @@
 				<a href="#" class="icon_home">xxx-主页</a>
 				<div class="user_info">
 					<span class="user_name">{{userName}}</span>,欢迎您使用xxx店进销存.
-					<a href="#" class="my_account">我的账号</a><i>|</i><a href="#" class="log_out" ng-click="signOut()">注销登陆</a>
+					<a href="" class="my_account">我的账号</a><i>|</i><a href="#" class="log_out" ng-click="signOut()">注销登陆</a>
 				</div>
 			</div>
 			<div class="logo_bar">
@@ -326,7 +326,7 @@
 				<ul class="instruction_lists">
 					<li>1&gt;&nbsp;状态:Y=正常，N=停用；</li>
 					<li>2&gt;&nbsp;双击某一条数据可进行信息修改；</li>
-					<li>3&gt;&nbsp;<span class="red">操作技巧</span>:下载模板并批量修改后在<a href="#">导入</a></li>
+					<!-- <li>3&gt;&nbsp;<span class="red">操作技巧</span>:下载模板并批量修改后在<a href="#">导入</a></li> -->
 				</ul>
 			</div>
 		</div>
@@ -346,9 +346,9 @@
 					<button type="button" ng-click="add('store-table')">新建</button>
 				</div>
 			</div>
-			<table class="data_table">
+			<table class="data_table" id="customers">
 				<tr>
-					<th></th>
+					<!-- <th></th> -->
 					<th class="check_box">
 						<input class="inp" ng-click="selectAll()" type="checkbox" ng-model="isSelectedAll">
 					</th>
@@ -360,7 +360,7 @@
 					<th>状态</th>
 				</tr>
 				<tr ng-repeat="item in lists" class="data_item" ng-dblclick="edit($index)">
-					<td>{{item.index}}</td>
+					<!-- <td>{{item.index}}</td> -->
 					<td class="check_box"><input type="checkbox" ng-model="item.isSelected"></td>
 					<td>{{item.storeCode}}</td>
 					<td>{{item.storeName}}</td>
@@ -421,12 +421,41 @@
 			</table>
 			<div class="btn_box">
 				<button type="button" ng-click="login()">登陆</button>
-				<button type="button">
-					<a href="./login.html">取消</a>
-				</button>
+				<button type="button" ng-click="register()">注册</button>
+			</div>
+			<a href="./find-password.html" class="forget_password">忘记密码？</a>
+		</div>
+	</div>
+	<div class="register">
+		<div class="register_box">
+			<h2 class="title">注册</h2>
+			<table class="register_table">
+				<tr>
+					<td class="first_td">邮箱：</td>
+					<td class="email">
+						<input type="text" placeholder="邮箱" ng-model="registerName">
+						<span class="red username_erro">{{registerNameTip}}</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="first_td">密码：</td>
+					<td><input type="password" placeholder="密码" ng-model="registerPassword"></td>
+				</tr>
+				<tr>
+					<td class="first_td">确认密码：</td>
+					<td class="register_repassword">
+						<input type="password" placeholder="确认密码" ng-model="registerRepassword">
+						<span class='red re_password_erro'>{{repasswordTip}}</span>
+					</td>
+				</tr>
+			</table>
+			<div class="btn_box">
+				<button type="button" ng-click="submit()">提交</button>
+				<button type="button" ng-click="cancel()">取消</button>
 			</div>
 		</div>
 	</div>
+	<!-- <button class="btn btn-success" onClick="$('#customers').tableExport({type: 'excel', escape: 'false'});">Excel Export</button> -->
 	<script src="js/jquery-1.9.1.js"></script>
 	<script src="js/angular.js"></script>
 	<script src="js/common.js"></script>

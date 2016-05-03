@@ -351,7 +351,8 @@ em {
 }
 
 /*-----------------------------------登陆弹出框样式-----------------------------------*/
-.login {
+.login,
+.register {
 	display: none;
 	position: fixed;
 	left: 0;
@@ -361,7 +362,11 @@ em {
 	background: rgba(0, 0, 0, 1);
 	text-align: center;
 }
-.login_box {
+.register {
+	z-index: 1000;
+}
+.login_box,
+.register_box {
 	position: absolute;
 	width: 320px;
 	height: 320px;
@@ -372,22 +377,26 @@ em {
 	background: #fff;
 	border-radius: 6px;
 }
-.login_table {
+.login_table,
+.register_table {
 	margin-top: 20px;
 	margin-bottom: 30px;
 }
-.login_table td {
+.login_table td,
+.register_table td {
 	border: none;
 	width: 200px;
 	padding: 10px 0;
 	text-align: left;
 }
 
-.login_table input {
+.login_table input,
+.register_table input {
 	height: 32px;
 	width: 90%;
 }
-.login_table .first_td {
+.login_table .first_td,
+.register_table .first_td {
 	text-align: right;
 	width: 90px;
 }
@@ -399,4 +408,27 @@ em {
 	display: inline-block;
 	width: 32%;
 	height: 32px;
+}
+.forget_password {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+}
+
+
+/*-------------------------------------注册框样式-----------------------------------*/
+.email,
+.register_repassword {
+	position: relative;
+}
+.username_erro,
+.re_password_erro {
+	position: absolute;
+	left: 0;
+}
+.re_password_erro {
+	bottom: -5px;
+}
+.username_erro {
+	top: -5px;
 }

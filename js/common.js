@@ -1,3 +1,4 @@
+var ip = '192.168.2.104';
 $(function() {
 	// $('.item').bind('mouseover', function() {
 	// 	$(this).find('.sub_container,sub_container_wrap').slideDown(200);

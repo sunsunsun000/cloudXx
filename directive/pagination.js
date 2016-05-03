@@ -14,6 +14,8 @@ app.directive("pagination", function() {
                 if (!newValue) {
                     return;
                 }
+
+                $scope.pageargs.switch = undefined;
                 $scope.current = parseInt($scope.pageargs.pn) - 1;
                 $scope.pageNode = $scope.current;
                 $scope.pNum = parseInt($scope.pageargs.ps);

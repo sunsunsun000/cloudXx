@@ -10,7 +10,7 @@
 app.factory('request', function ($http, $q) {
 
     return function (option) {
-        
+        option.url = option.url + '?timeStamp=' + (new Date()).valueOf();
         return $http(option).then(function (response) {
             var defer = $q.defer();
             console.log(response);

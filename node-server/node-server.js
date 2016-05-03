@@ -6,9 +6,13 @@ var http = require('http');
 var path = require('path');
 var fs = require('fs');
 var url = require('url');
+var nodemailer  = require("nodemailer");
 var dbHelper = require('./dbHelper');
 
 var app = http.createServer();
+
+var user = '2509344578@qq.com', 
+    pass = 'gwwokssvfnjtebhh';
 
 function parseParams (string) {
     var arr = string.split('&');
@@ -33,6 +37,7 @@ function handleIssueList (req, res) {
     }
     var parsed = url.parse(req.url);
     var params = parseParams((parsed.search || '').substr(1));
+    delete params.timeStamp;
     var result = {
         code: 0,
         errMsg: undefined
@@ -51,8 +56,9 @@ function handleIssueList (req, res) {
 
                 var params = formData;
 
+                console.log(formData);
                 params = eval ("(" + params + ")");
-                
+                console.log(params);
                 dbHelper.deleteItem('users', params, finish, result);
                 
             });
@@ -65,8 +71,8 @@ function handleIssueList (req, res) {
                 }
             });
             req.on('end', function () {
-
-                formData = JSON.parse(formData);
+                formData = JSON.parse(formData || '{}');
+                
 
                 if(formData.loginRequest) {
 
@@ -77,8 +83,9 @@ function handleIssueList (req, res) {
                             result.isLogin = false;
                             finish(result);
                         } else {
-                            param.isLogin = true;
-                            finish(param);
+                            result.isLogin = true;
+                            result.data = rs;
+                            finish(result);
                         }
                     });
                 } else if(formData.islogin) {
@@ -91,7 +98,7 @@ function handleIssueList (req, res) {
 
                         } else {
                             result.isLogin = true;
-                            result.tooken = new Date().getTime();
+                            result.tooken = new Date().getTime() + '';
 
                             dbHelper.update('user2', {_id:rs[0]._id, name: formData.name,pwd:formData.pwd, tooken:result.tooken});
                             finish(result);
@@ -101,9 +108,13 @@ function handleIssueList (req, res) {
                 } else if(formData.signOut) {
 
                     dbHelper.update('user2', {_id:formData._id, tooken: +formData.tooken}, finish, result);
+                } else if(!!formData.isRegister) {//用户注册
+                    console.log('用户注册');
+                    delete formData.isRegister;
+                    dbHelper.singleInsert('user2', formData, finish, result);
                 } else {
-                    console.log('插入数据');
-                    console.log(formData);
+
+                    console.log(formData,'8888888888888888888888888888');
                     dbHelper.singleInsert('users', formData, finish, result);
                 }
 
@@ -117,8 +128,7 @@ function handleIssueList (req, res) {
                 }
             });
             req.on('end', function () {
-                console.log('更新数据');
-                console.log(formData);
+                console.log(JSON.parse(formData));
                 dbHelper.update('users', JSON.parse(formData), finish, result);
             });
             break;
@@ -133,30 +143,95 @@ function handleIssueList (req, res) {
                 pageNum: +params.pn || 1,
             };
 
-            var filter = {};
+            delete params.pl;
+            delete params.ps;
+            delete params.pn;
+
+            // var filter = {};
+
+            // console.log(params);
             
-            if(params.storeCode) {
+            // if(params.storeCode) {
 
-                filter.storeCode = decodeURI(params.storeCode);
+            //     filter.storeCode = decodeURI(params.storeCode);
+            // }
+            // if(params.storeName) {
+            //     filter.storeName = decodeURI(params.storeName);
+            // }
+            // if(params.storeAddress) {
+            //     filter.storeAddress = decodeURI(params.storeAddress);
+            // }
+            // if(params.status) {
+            //     filter.status = decodeURI(params.status);
+            // }
+            
+            for(var index in params) {
+                params[index] = decodeURI(params[index]);
             }
-            if(params.storeName) {
-                filter.storeName = decodeURI(params.storeName);
-            }
-            if(params.storeAddress) {
-                filter.storeAddress = decodeURI(params.storeAddress);
-            }
-            if(params.status) {
-                filter.status = decodeURI(params.status);
-            }
+            console.log(params,'0000000000000000000000000000');
+            if(!!params.judgeExit) {
 
-            dbHelper.getData('users', filter, function(rs) {
-                data.total = rs.length;
-                data.data = rs.slice(data.pageSize * (data.pageNum - 1), data.pageSize * data.pageNum);
-                result.data = data;
-                finish(result);  
-            });
+                delete params.judgeExit;
+
+                dbHelper.getData('user2', params, function(rs) {
+
+                    data.total = rs.length;
+                    data.data = rs.slice(data.pageSize * (data.pageNum - 1), data.pageSize * data.pageNum);
+                    result.data = data;
+                    finish(result);  
+                });
+            } else if(!!params.forgetPassword) {
+
+                delete params.forgetPassword;
+                dbHelper.getData('user2', params, function(rs) {
+                    if(rs.length <= 0) {
+                        result.data = {
+                            message: '未找到用户'
+                        }
+                    } else {
+                        result.data = {
+                            message: '找回密码邮件已发送到您邮箱，请查收'
+                        }
+
+                        var smtpTransport = nodemailer.createTransport({
+                              service: "QQ",
+                              auth: {
+                                user: user,
+                                pass: pass
+                            }
+                          });
+
+                        smtpTransport.sendMail({
+                            from    : 'Service<' + user + '>'
+                          , to      : '<' + user + '>'
+                          , subject : '找回密码邮件'
+                          , html    : '您的密码是：' + rs[0].pwd + ' <br> '
+                        }, function(err, res) {
+                            console.log(err, res);
+                        });
+                    }
+                    
+                    finish(result); 
+                });
+            }
+            else {
+                dbHelper.getData('users', params, function(rs) {
+
+                    console.log(params);
+
+                    data.total = rs.length;
+                    data.data = rs.slice(data.pageSize * (data.pageNum - 1), data.pageSize * data.pageNum);
+                    result.data = data;
+                    finish(result);  
+                });
+            }
+            
         }
     }
+}
+
+function mailIdentify (req, res) {
+
 }
 var index = 0;
 
@@ -175,8 +250,8 @@ app.on('request', function (req, res) {
             handleIssueList(req, res);
             break;
         }
-        case '/comment': {
-            handleCommentList(req, res);
+        case '/mail-identify': {
+            mailIdentify(req, res);
             break;
         }
         default: {

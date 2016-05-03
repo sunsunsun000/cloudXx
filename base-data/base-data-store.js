@@ -1,5 +1,4 @@
-
-app.controller('baseDataStoreCtrl', function($scope, request) {
+app.controller('baseDataStoreCtrl', function($scope, request, $timeout) {
 
 	/**
 	 * currentStatus----状态按钮被选择的状态，默认为空，即未选择任何状态
@@ -15,13 +14,30 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 	};
 	$scope.isSelectedAll = false;
 
+	/**
+	 * 用户注册密码与确认密码
+	 */
+	$scope.registerPassword = '';
+	$scope.registerRepassword = '';
+
+	/**
+	 * 注册信息错误提示
+	 */
+	$scope.registerNameTip = '';
+	$scope.repasswordTip = '';
+
+	/**
+	 * 用以判断注册信息是否符合
+	 */
+	$scope.isRight = false;
+
 	function reloadPage (args) {
 		args = args || {};
 		
 		var temp = {
             ps: args.ps || 10,
             pn: args.pn || 1,
-            pl: args.pl || 5,//分页栏显示页数
+            pl: args.pl || 5//分页栏显示页数
         };
 
 		temp.switch = !$scope.pageSearchList.switch;
@@ -62,12 +78,12 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
      */
     var isLoad = function() {
     	var tooken = getCookie('tooken');
-    	if(tooken == -1) {//本地为保存有此用户的登陆信息~即未登录~
+    	if(tooken == -1) {//本地未保存有此用户的登陆信息~即未登录~
 		 	console.log('未登录');
 		 	$('div.login').css('display','block');
 		 } else {
 		 	var param = {
-				url:'http://localhost:7999/get-data',
+				url:'http://' + ip + ':7999/get-data',
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 				method: 'POST',
 				data: {
@@ -78,8 +94,11 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 
 			request(param).then(function(rs) {
 				console.log('请求成功');
+				console.log(rs.isLogin,'--------------------');
 				if(!!rs.isLogin) {
 					console.log('tooken有效');
+					console.log(rs);
+					$scope.userName = rs.data[0].name;
 				} else {
 					console.log('tooken失效');
 					$('div.login').css('display','block');
@@ -99,12 +118,12 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
     $scope.login = function() {
     	var loginInfo = {
     		islogin: true,
-    		name:$scope.username,
-    		pwd:$scope.password
+    		name: $scope.username,
+    		pwd: $scope.password
     	};
 
     	var param = {
-    		url:'http://localhost:7999/get-data',
+    		url:'http://' + ip +':7999/get-data',
     		headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     		method: 'POST',
     		data: loginInfo
@@ -112,6 +131,7 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 
     	request(param).then(function(rs) {
     		console.log('请求成功');
+    		console.log(rs);
     		if(!!rs.isLogin) {
     			alert('登陆成功');
     			setCookie('tooken', rs.tooken);
@@ -130,7 +150,6 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
     }
 
     isLoad();
-
 
     /**
      * 删除cookie
@@ -169,13 +188,13 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
     $scope.signOut = function() {
     	var tooken = getCookie('tooken');
     	var param = {
-    		url:'http://localhost:7999/get-data',
+    		url:'http://' + ip +':7999/get-data',
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 			method: 'POST',
 			data: {
 				tooken:tooken,
 				signOut:true,
-				_id:item['_id']
+				// _id:item['_id']
 			}
 		};
 
@@ -187,7 +206,6 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 			console.log(err);
 		});
     }
-
 
 	/**
 	 * 批量选中按钮事件处理函数
@@ -245,26 +263,21 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 		});
 
 		var param = {
-			url:'http://localhost:7999/get-data',
+			url:'http://' + ip +':7999/get-data',
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 			method: 'DELETE',
 			data: deleteLists
 		};
-		console.log('123123123123123');
+
 		request(param).then(function() {
-			console.log('请求成功');
 			reloadPage();
 
 		},function(err) {
 			console.log('请求失败');
 			console.log(err);
 		});
-
-
-
-		console.log(deleteLists);
 		
-		$scope.selectAll();
+		$scope.isSelectedAll = false;
 	};
 
 	/**
@@ -286,10 +299,9 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 	 * @return {[type]} [description]
 	 */
 	$scope.cancel = function() {
-		$('.cover').hide();
+		$('div.cover').hide();
+		$('div.register').css('display', 'none');
 	}
-
-	console.log($scope._id);
 
 	/**
 	 * 在新建数据弹出层点击取消保存时事件响应函数
@@ -312,11 +324,11 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 		}
 		console.log($scope._id);
 		if($scope._id && $scope._id !== '') {
-			console.log('更新数据');
+
 			datas._id = $scope._id;
 
 			var param = {
-				url:'http://localhost:7999/get-data',
+				url:'http://' + ip +':7999/get-data',
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 				method: 'PUT',
 				data: datas
@@ -335,9 +347,14 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 			});
 
 		} else {
-			console.log('插入数据');
+
+			var time = new Date();
+			datas.creater = $scope.username;
+			datas.createTime = time.getFullYear() + '-' + (time.getMonth() + 1) + '-' + time.getDate();
+
+			console.log('yyyyyyyyyyyyyyyyyyyyyyy');
 			var param = {
-				url:'http://localhost:7999/get-data',
+				url:'http://' + ip +':7999/get-data',
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 				method: 'POST',
 				data: datas
@@ -355,9 +372,6 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 				$scope._id = '';
 			});
 		}
-		console.log(datas);
-
-		
 	}
 
 	$scope.edit = function(index) {
@@ -376,6 +390,10 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 		$('.cover').show();
 
 		$scope._id = item._id
+	}
+
+	$scope.register = function() {
+		$('div.register').css('display', 'block');
 	}
 
 	/**
@@ -399,13 +417,9 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
     	console.log(args);
 
         var param = {
-            url:'http://localhost:7999/get-data',
+            url:'http://' + ip +':7999/get-data',
 			method: 'GET',
 			params: args
-			// params: {
-			// 	pageNum: args.pn,//$scope.pageSearchList.pn,
-   //          	pageSize: args.ps,//$scope.pageSearchList.ps,
-			// }
         };
 
         request(param).then(function(rs) {
@@ -426,5 +440,73 @@ app.controller('baseDataStoreCtrl', function($scope, request) {
 			console.log(err);
 		});
     };
+
+    $scope.submit = function() {
+    	if(!$scope.isRight) {
+    		return;
+    	}
+    	var args = {
+    		isRegister: true,
+    		name: $scope.registerName,
+    		pwd: $scope.registerPassword
+    	};
+    	console.log(args);
+    	var param = {
+    		url:'http://' + ip +':7999/get-data',
+    		headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    		method: 'POST',
+			data: args
+    	};
+
+    	request(param).then(function(rs) {
+    		alert('注册成功，请登录！');
+    		$('div.register').css('display', 'none');
+    	}, function(err) {
+    		alert('注册失败！');
+    	});
+    }
+
+    $scope.$watch('registerRepassword', function(newValue, oldValue) {
+    	if(newValue !== $scope.registerPassword) {
+    		$scope.repasswordTip = '*两次输入密码不对！';
+    		$scope.isRight = false;
+    	} else {
+    		$scope.repasswordTip = '';
+    		$scope.isRight = true;
+    	}
+    });
+
+    $scope.$watch('registerName', function(newValue, oldValue) {
+
+    	if(!newValue) {
+    		return;
+    	}
+    	
+  		var param = {
+            url:'http://' + ip +':7999/get-data',
+			method: 'GET',
+			params: {
+				name: newValue,
+				judgeExit: true
+			}
+        };
+
+        request(param).then(function(rs) {
+        	console.log(rs);
+			if (rs.data) {
+                if(rs.data.data.length != 0) {
+                	$scope.registerNameTip = "*用户名已注册";
+                	$scope.isRight = false;
+                } else {
+                	$scope.registerNameTip = "";
+                	$scope.isRight = true;
+                }
+
+            }
+			
+		}, function(err)  {
+			console.log(err);
+		});
+    });
 	
 });
