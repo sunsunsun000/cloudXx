@@ -13,7 +13,7 @@ db.open(function(err, db) {
 });
 
 var getData = function(collectionName, filter, success) {
-    console.log(filter,'-------============---------------');
+    console.log(collectionName,'-------xxxxxxxxxxxxxxx--------------');
     db.collection(collectionName, function(err, collection) {
         if (err) {
             throw err;

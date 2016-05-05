@@ -1,4 +1,4 @@
-app.controller('baseDataStoreCtrl', function($scope, request, $timeout, $rootScope) {
+app.controller('goodsCtrl', function($scope, request, $timeout, $rootScope) {
 
 	/**
 	 * currentStatus----状态按钮被选择的状态，默认为空，即未选择任何状态
@@ -6,17 +6,10 @@ app.controller('baseDataStoreCtrl', function($scope, request, $timeout, $rootSco
 	 * isSelected-------判断批量选择按钮是否被选中
 	 */
 	$scope.currentStatusFilter = '';
-	$scope.statusList = ['所有','正常','停用'];
-	$scope.statusMap = {
-		'所有': '',
-		'正常': 'Y',
-		'停用': 'N'
-	};
-
-	//指定操作的数据库的collectionName
-	var collectionName = 'users';
-
+	
 	$scope.isSelectedAll = false;
+
+	var collectionName = 'goods';
 
 	function reloadPage (args) {
 		args = args || {};
@@ -49,18 +42,18 @@ app.controller('baseDataStoreCtrl', function($scope, request, $timeout, $rootSco
 	 */
 	$scope.search = function() {
 		var filter = {};
-		if($scope.storeCodeFilter) {
-			filter['storeCode'] = $scope.storeCodeFilter;
+		if($scope.goodIDFilter) {
+			filter['goodID'] = $scope.goodIDFilter;
 		}
 		
-		if($scope.storeNameFilter) {
-			filter['storeName'] = $scope.storeNameFilter;
+		if($scope.goodTypeFilter) {
+			filter['goodType'] = $scope.goodTypeFilter;
 		}
-		if($scope.storeAddressFilter) {
-			filter['storeAddress'] = $scope.storeAddressFilter;
+		if($scope.goodNameFilter) {
+			filter['goodName'] = $scope.goodNameFilter;
 		}
-		if($scope.currentStatusFilter) {
-			filter['status'] = $scope.statusMap[$scope.currentStatusFilter];
+		if($scope.goodCodeFilter) {
+			filter['goodCode'] = $scope.goodCodeFilter;
 		}
 
 		var param = {};
@@ -73,10 +66,10 @@ app.controller('baseDataStoreCtrl', function($scope, request, $timeout, $rootSco
 	 * 重置按钮事件处理函数，将搜索条件框中的条件清空
 	 */
 	$scope.reset = function() {
-		$scope.storeCodeFilter = '';
-		$scope.storeNameFilter = '';
-		$scope.storeAddressFilter = '';
-		$scope.currentStatusFilter = '';
+		$scope.goodIDFilter = '';
+		$scope.goodTypeFilter = '';
+		$scope.goodNameFilter = '';
+		$scope.goodCodeFilter = '';
 	};
 
 	$scope.delete = function() {
@@ -101,6 +94,7 @@ app.controller('baseDataStoreCtrl', function($scope, request, $timeout, $rootSco
 			reloadPage();
 
 		},function(err) {
+			console.log('请求失败');
 			console.log(err);
 		});
 		
@@ -153,7 +147,6 @@ app.controller('baseDataStoreCtrl', function($scope, request, $timeout, $rootSco
 
 			datas._id = $scope._id;
 			datas.collectionName = collectionName;
-
 			var param = {
 				url:'http://' + ip +':7999/get-data',
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -202,16 +195,21 @@ app.controller('baseDataStoreCtrl', function($scope, request, $timeout, $rootSco
 
 	$scope.edit = function(index) {
 		var item = $scope.lists[index];
-		$scope.storeCode = item.storeCode;
-		$scope.storeName = item.storeName;
-		$scope.storeAddress = item.storeAddress;
-		$scope.phone = item.phone;
+		$scope.goodID = item.goodID;
+		$scope.goodType = item.goodType;
+		$scope.goodName = item.goodName;
+		$scope.goodCode = item.goodCode;
+		$scope.manufacturer = item.manufacturer;
+		$scope.goodPic = item.goodPic;
+		$scope.sellerID = item.sellerID;
+		$scope.goodCount = item.goodCount;
+		$scope.minCount = item.minCount;
+		$scope.priceB = item.priceB;
+		$scope.priceS = item.priceS;
+		$scope.releaseDate = item.releaseDate;
+		$scope.sellerCount = item.sellerCount;
+		$scope.remark = item.remark;
 		console.log(item.status);
-		if(item.status == 'Y') {
-			$('#normal').attr('checked', true)
-		} else {
-			$('#closed').attr('checked', true);
-		}
 
 		$('.cover').show();
 

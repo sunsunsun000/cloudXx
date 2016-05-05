@@ -1,0 +1,45 @@
+.edit_count {
+	display: none;
+	position: fixed;
+	z-index: 999;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	text-align: center;
+}
+
+.edit_count_box {
+	position: absolute;
+	width: 500px;
+	height: 320px;
+	top: 50%;
+	left: 50%;
+	margin-top: -160px;
+	margin-left: -250px;
+	background: #fff;
+	border-radius: 6px;
+}
+
+.edit_count_table {
+	margin: 0 auto 32px auto;
+}
+.edit_count_table td {
+	width: 280px;
+	padding: 10px 5px;
+	text-align: left;
+}
+.edit_count_table .first_td {
+	text-align: right;
+	width: 80px;
+}
+
+.relative_box {
+	position: relative;
+}
+
+.err {
+	position: absolute;
+	right: 0;
+}

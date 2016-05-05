@@ -1,0 +1,62 @@
+.body {
+	padding: 0 10px;
+	min-height: 320px;
+}
+.red {
+	color: red;
+}
+.filter {
+	margin-top: 20px;
+	padding: 10px 0;
+	
+	overflow: hidden;
+}
+.filter_input {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 10px 10px;
+}
+.filter_input input {
+	outline: 0;
+	border: 1px solid #ccc;
+}
+.filter_btns {
+	float: right;
+	margin-top: 10px;
+}
+.filter_btns:after {
+	content: "."; 
+    display: block;
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+.data_table td,
+.data_table th {
+	width: 200px;
+	border: 1px solid #ccc;
+	text-align: center;
+}
+.data_table .check_box,
+.data_table th:first-child,
+.data_table td:first-child {
+	width: 32px;
+}
+
+.cover table td {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: left;
+	width: 300px;
+}
+
+.cover table .first_td {
+	text-align: right;
+	width: 90px;
+}
+
+.new_item_box  {
+	height: 600px;
+	margin-top: -300px;
+}

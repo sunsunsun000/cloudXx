@@ -12,7 +12,8 @@ var dbHelper = require('./dbHelper');
 var app = http.createServer();
 
 var user = '2509344578@qq.com', 
-    pass = 'gwwokssvfnjtebhh';
+    // pass = 'gwwokssvfnjtebhh';
+    pass = 'qotfgmylvdvhebfj';
 
 function parseParams (string) {
     var arr = string.split('&');
@@ -53,13 +54,16 @@ function handleIssueList (req, res) {
             });
             req.on('end', function () {
                 var deleteLists = [];
-
-                var params = formData;
+                formData = JSON.parse(formData || '{}');
+                var params = formData.deleteLists;
+                var collectionName = formData.collectionName;
 
                 console.log(formData);
-                params = eval ("(" + params + ")");
-                console.log(params);
-                dbHelper.deleteItem('users', params, finish, result);
+
+                console.log(collectionName,'000000000000--------------0000000000000');
+                // params = eval ("(" + params + ")");
+                console.log(params,'---------------------00000000000000---------------------');
+                dbHelper.deleteItem(collectionName, params, finish, result);
                 
             });
             break;
@@ -72,6 +76,8 @@ function handleIssueList (req, res) {
             });
             req.on('end', function () {
                 formData = JSON.parse(formData || '{}');
+                var collectionName = formData.collectionName;
+                delete formData.collectionName;
                 
 
                 if(formData.loginRequest) {
@@ -113,9 +119,8 @@ function handleIssueList (req, res) {
                     delete formData.isRegister;
                     dbHelper.singleInsert('user2', formData, finish, result);
                 } else {
-
-                    console.log(formData,'8888888888888888888888888888');
-                    dbHelper.singleInsert('users', formData, finish, result);
+                    console.log(collectionName,'xxxxxxxxxxxxxxxxx');
+                    dbHelper.singleInsert(collectionName, formData, finish, result);
                 }
 
             });
@@ -128,14 +133,22 @@ function handleIssueList (req, res) {
                 }
             });
             req.on('end', function () {
-                console.log(JSON.parse(formData));
-                dbHelper.update('users', JSON.parse(formData), finish, result);
+                formData = JSON.parse(formData);
+                var collectionName = formData.collectionName;
+                delete formData.collectionName;
+                dbHelper.update(collectionName, formData, finish, result);
+                
             });
+            break;
+        }
+        case 'OPTIONS': {
+            console.log('进来了');
+            finish(result); 
             break;
         }
         case 'GET':
         default: {
-
+            console.log(req.method.toUpperCase());
             var data = {
                 list: [],
                 total: 0, 
@@ -146,29 +159,11 @@ function handleIssueList (req, res) {
             delete params.pl;
             delete params.ps;
             delete params.pn;
-
-            // var filter = {};
-
-            // console.log(params);
-            
-            // if(params.storeCode) {
-
-            //     filter.storeCode = decodeURI(params.storeCode);
-            // }
-            // if(params.storeName) {
-            //     filter.storeName = decodeURI(params.storeName);
-            // }
-            // if(params.storeAddress) {
-            //     filter.storeAddress = decodeURI(params.storeAddress);
-            // }
-            // if(params.status) {
-            //     filter.status = decodeURI(params.status);
-            // }
             
             for(var index in params) {
                 params[index] = decodeURI(params[index]);
             }
-            console.log(params,'0000000000000000000000000000');
+
             if(!!params.judgeExit) {
 
                 delete params.judgeExit;
@@ -215,9 +210,9 @@ function handleIssueList (req, res) {
                 });
             }
             else {
-                dbHelper.getData('users', params, function(rs) {
-
-                    console.log(params);
+                var collectionName = params.collectionName;
+                delete params.collectionName;
+                dbHelper.getData(collectionName, params, function(rs) {
 
                     data.total = rs.length;
                     data.data = rs.slice(data.pageSize * (data.pageNum - 1), data.pageSize * data.pageNum);

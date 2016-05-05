@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+	<meta charset="UTF-8">
+	<title>商品信息页</title>
+	<link rel="stylesheet" href="common-style/common-style.css">
+	<link rel="stylesheet" href="directive/header/header.css">
+	<link rel="stylesheet" href="base-data/goods.css">
+</head>
+<body ng-controller="goodsCtrl">
+	<div class="main">
+		<header></header>
+		
+		<div class="body">
+			<div class="filter">
+				<div class="filter_input">
+					<span class="">商品编号：</span><input type="text" ng-model="goodIDFilter">
+					<span class="">商品类别：</span><input type="text" ng-model="goodTypeFilter">
+					<span class="">商品名称：</span><input type="text" ng-model="goodNameFilter">
+					<span class="">商品简码：</span><input type="text" ng-model="goodCodeFilter">
+				</div>
+				<div class="filter_btns">
+					<button type="button" ng-click="search()">搜索</button>
+					<button type="button" ng-click="reset()">重置</button>
+					<button type="button" ng-click="delete()">批量删除</button>
+					<button type="button" ng-click="add('store-table')">新建</button>
+				</div>
+			</div>
+			<table class="data_table" id="customers">
+				<tr>
+					<!-- <th></th> -->
+					<th class="check_box">
+						<input class="inp" ng-click="selectAll()" type="checkbox" ng-model="isSelectedAll">
+					</th>
+					<th>商品编号</th>
+					<th>商品类别</th>
+					<th>商品名称</th>
+					<th>商品简码</th>
+					<th>生产厂商</th>
+					<th>商品图片</th>
+					<th>供货商编号</th>
+					<th>当前库存量</th>
+					<th>库存下线</th>
+					<th>采购单价</th>
+					<th>预售单价</th>
+					<th>保质期</th>
+					<th>销售量</th>
+					<th>备注</th>
+				</tr>
+				<tr ng-repeat="item in lists" class="data_item" ng-dblclick="edit($index)">
+					<!-- <td>{{item.index}}</td> -->
+					<td class="check_box"><input type="checkbox" ng-model="item.isSelected"></td>
+					<td>{{item.goodID}}</td>
+					<td>{{item.goodType}}</td>
+					<td>{{item.goodName}}</td>
+					<td>{{item.goodCode}}</td>
+					<td>{{item.manufacturer}}</td>
+					<td>{{item.goodPic}}</td>
+
+					<td>{{item.sellerID}}</td>
+					<td>{{item.goodCount}}</td>
+					<td>{{item.minCount}}</td>
+					<td>{{item.priceB}}</td>
+					<td>{{item.priceS}}</td>
+					<td>{{item.releaseDate}}</td>
+
+					<td>{{item.sellerCount}}</td>
+					<td>{{item.remark}}</td>
+				</tr>
+			</table>
+		</div>
+		<pagination list="lists" pagefn="getOrderList" pageargs="pageSearchList" class="page-bar s3 jump-hide right ng-isolate-scope"></pagination>
+	</div>
+	<div class="cover">
+		<form enctype="multipart/form-data" action="" method="post" class="new_item_box" name="store-datas">
+		    <table id="store-table">
+		        <tr>
+		            <td class="first_td"><label for="txtcode">商品编号：</label></td>
+		            <td><input type="text" id="txtcode" name="goodID" ng-model="goodID" /><span class="red necessary_info">*必填</span></td>
+		        </tr>
+		        <tr>
+		            <td class="first_td"><label for="txtname">商品类别：</label></td>
+		            <td><input type="text" id="txtname" name="goodType" ng-model="goodType" /></td>
+		        </tr>
+		        <tr>
+		            <td class="first_td"><label for="txtpswd">商品名称：</label></td>
+		            <td><input type="text" id="txtpswd" name="goodName" ng-model="goodName" /><span class="red necessary_info">*必填</span></td>
+		        </tr>
+		        <tr>
+		            <td class="first_td"><label for="txtcode">商品简码：</label></td>
+		            <td><input type="text" id="txtcode" name="goodCode" ng-model="goodCode" /></td>
+		        </tr>
+		        <tr>
+		            <td class="first_td"><label for="txtname">生产厂商：</label></td>
+		            <td><input type="text" id="txtname" name="manufacturer" ng-model="manufacturer" /></td>
+		        </tr>
+		        <tr>
+		            <td class="first_td"><label for="txtpswd">商品图片：</label></td>
+		            <td><input type="text" id="txtpswd" name="goodPic" ng-model="goodPic" /></td>
+		        </tr><tr>
+		            <td class="first_td"><label for="txtcode">供货商编号：</label></td>
+		            <td><input type="text" id="txtcode" name="sellerID" ng-model="sellerID" /><span class="red necessary_info">*必填</span></td>
+		        </tr>
+		        <tr>
+		            <td class="first_td"><label for="txtname">当前库存量：</label></td>
+		            <td><input type="text" id="txtname" name="goodCount" ng-model="goodCount" /></td>
+		        </tr>
+		        <tr>
+		            <td class="first_td"><label for="txtpswd">库存下线：</label></td>
+		            <td><input type="text" id="txtpswd" name="minCount" ng-model="minCount" /></td>
+		        </tr>
+		        <tr>
+		            <td class="first_td"><label for="txtpswd">采购单价：</label></td>
+		            <td><input type="text" id="txtpswd" name="priceB" ng-model="priceB" /></td>
+		        </tr>
+		        <tr>
+		            <td class="first_td"><label for="txtpswd">预售单价：</label></td>
+		            <td><input type="text" id="txtpswd" name="priceS" ng-model="priceS" /></td>
+		        </tr>
+		        <tr>
+		            <td class="first_td"><label for="txtpswd">保质期：</label></td>
+		            <td><input type="text" id="txtpswd" name="releaseDate" ng-model="releaseDate" /></td>
+		        </tr>
+		        <tr>
+		            <td class="first_td"><label for="txtpswd">销售量：</label></td>
+		            <td><input type="text" id="txtpswd" name="sellerCount" ng-model="sellerCount" /></td>
+		        </tr>
+		        <tr>
+		            <td class="first_td"><label for="txtpswd">备注：</label></td>
+		            <td><input type="text" id="txtpswd" name="remark" ng-model="remark" /></td>
+		        </tr>
+		    </table>
+		    <button type="button" ng-click="cancel()" class="add_btn_cancel">取消</button>
+			<button type="button" ng-click="save('store-datas', 'store-table')" class="add_btn_save">保存</button>
+		</form>	
+	</div>
+
+	<script src="js/jquery-1.9.1.js"></script>
+	<script src="js/angular.js"></script>
+	<script src="js/common.js"></script>
+	<script src="service/request.js"></script>
+	<script src="directive/pagination.js"></script>
+	<script src="directive/header/header.js"></script>
+	<script src="base-data/goods.js"></script>
+</body>
+</html>
